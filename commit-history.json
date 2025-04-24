@@ -15,5 +15,22 @@
     },
     "coverage": 0,
     "test_count": 0
+  },
+  {
+    "sha": "96e163d9e23bc31ee5a36ab7331fd6d303bdb4a2",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-24T07:23:10.000Z",
+      "message": "Implementacion del formulario y validacion de campos",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/96e163d9e23bc31ee5a36ab7331fd6d303bdb4a2"
+    },
+    "stats": {
+      "total": 51,
+      "additions": 40,
+      "deletions": 11,
+      "date": "2025-04-24"
+    },
+    "coverage": 0,
+    "test_count": 0
   }
 ]
