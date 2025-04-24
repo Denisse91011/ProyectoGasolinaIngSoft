@@ -1,0 +1,19 @@
+[
+  {
+    "sha": "af65ea0ed9319c7007e475258e26187cecd87d57",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T05:39:27.000Z",
+      "message": "feat: Añadir funcion de Reportar Ingreso de Gasolina",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/af65ea0ed9319c7007e475258e26187cecd87d57"
+    },
+    "stats": {
+      "total": 61,
+      "additions": 32,
+      "deletions": 29,
+      "date": "2025-04-24"
+    },
+    "coverage": 0,
+    "test_count": 2
+  }
+]
