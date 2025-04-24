@@ -15,5 +15,22 @@
     },
     "coverage": 0,
     "test_count": 3
+  },
+  {
+    "sha": "60db6a93c3e06831f01aa40220cbdddbb0b7be02",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T06:25:04.000Z",
+      "message": "HU1 - Registro de Usuario (Conductor y Operario)",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/60db6a93c3e06831f01aa40220cbdddbb0b7be02"
+    },
+    "stats": {
+      "total": 0,
+      "additions": 0,
+      "deletions": 0,
+      "date": "2025-04-24"
+    },
+    "coverage": 0,
+    "test_count": 3
   }
 ]
