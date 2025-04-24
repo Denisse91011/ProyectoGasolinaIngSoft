@@ -10,10 +10,31 @@
     "stats": {
       "total": 61,
       "additions": 32,
+    "sha": "a1869a90c44043769d1f1330eaa929e316a42f9c",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T05:28:29.000Z",
+      "message": "feat: Añadir funcion de Inicio de sesión (para ambos roles)",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/a1869a90c44043769d1f1330eaa929e316a42f9c"
+    },
+    "stats": {
+      "total": 74,
+      "additions": 45,
+    "sha": "4d2c6fa51c582111ddce9d3da7a10dc036e13b34",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T04:53:27.000Z",
+      "message": "feat: Añadir funcion registro de usuario conductor y operario",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/4d2c6fa51c582111ddce9d3da7a10dc036e13b34"
+    },
+    "stats": {
+      "total": 57,
+      "additions": 28,
       "deletions": 29,
       "date": "2025-04-24"
     },
     "coverage": 0,
     "test_count": 2
+    "test_count": 3
   }
 ]
