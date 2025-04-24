@@ -1,0 +1,19 @@
+[
+  {
+    "sha": "a1869a90c44043769d1f1330eaa929e316a42f9c",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T05:28:29.000Z",
+      "message": "feat: Añadir funcion de Inicio de sesión (para ambos roles)",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/a1869a90c44043769d1f1330eaa929e316a42f9c"
+    },
+    "stats": {
+      "total": 74,
+      "additions": 45,
+      "deletions": 29,
+      "date": "2025-04-24"
+    },
+    "coverage": 0,
+    "test_count": 3
+  }
+]
