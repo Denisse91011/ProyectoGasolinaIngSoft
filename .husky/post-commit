@@ -1,0 +1,31 @@
+node ./script/commitScript.js
+
+REPO_DIR="$(git rev-parse --show-toplevel)"
+# Verificar si estamos en medio de un proceso recursivo
+LOCK_FILE="$REPO_DIR/.commit-tracker-lock"
+if [ -f "$LOCK_FILE" ]; then
+  echo "Lock file encontrado. Saliendo..."
+  exit 0
+fi
+
+touch "$LOCK_FILE"
+
+echo "Ejecutando post-commit..."
+node "$REPO_DIR/commit-tracker.js"
+
+# Verificar si hay cambios en commit-history.json
+if [ -n "$(git status --porcelain "$REPO_DIR/commit-history.json")" ]; then
+  # Añadir el archivo al índice
+  git add "$REPO_DIR/commit-history.json"
+  
+  # Guardar el mensaje del commit anterior
+  COMMIT_MSG=$(git log -1 --pretty=%B)
+  
+  # Hacer amend sin disparar más hooks - usamos variables de entorno para evitar bucles
+  export HUSKY=0
+  git commit --amend -m "$COMMIT_MSG" --no-verify
+  unset HUSKY
+fi
+
+# Eliminar el archivo de bloqueo
+rm -f "$LOCK_FILE"
