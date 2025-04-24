@@ -1,5 +1,15 @@
 [
   {
+    "sha": "6b2930e4d749d860d738d3bc557411be18bda911",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-24T05:52:12.000Z",
+      "message": "feat: Añadir funcion de Solicitud de Ticket de Carga",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/6b2930e4d749d860d738d3bc557411be18bda911"
+    },
+    "stats": {
+      "total": 73,
+      "additions": 44,
     "sha": "af65ea0ed9319c7007e475258e26187cecd87d57",
     "author": "Denisse91011",
     "commit": {
