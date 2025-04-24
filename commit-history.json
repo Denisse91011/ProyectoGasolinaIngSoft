@@ -32,5 +32,22 @@
     },
     "coverage": 0,
     "test_count": 0
+  },
+  {
+    "sha": "fd49713a34cd035d13a682700e8e9bde1bf6874c",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-24T07:39:06.000Z",
+      "message": "Fronted - Formulario de Iniciar Sesion realizado",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/fd49713a34cd035d13a682700e8e9bde1bf6874c"
+    },
+    "stats": {
+      "total": 42,
+      "additions": 38,
+      "deletions": 4,
+      "date": "2025-04-24"
+    },
+    "coverage": 0,
+    "test_count": 0
   }
 ]

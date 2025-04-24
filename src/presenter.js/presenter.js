@@ -1,14 +1,18 @@
-import './iniciarSesion'
+import {iniciarSesion} from './iniciarSesion.js'
 import { registroUsuario } from './registroUsuario.js';
 import './solicitarTicketCarga'
 import './reportarIngresoGasolina'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
-    const form = document.getElementById('registro-form');
+    const Registroform = document.getElementById('registro-form');
+    const loginForm = document.getElementById('login-form');
     const resultadoDiv = document.getElementById('resultado-div');
 
-    form.addEventListener('submit' , (e) => {
+    const usuariosDB =[];
+    
+    if(registroForm){
+    Registroform.addEventListener('submit' , (e) => {
         e.preventDefault();
         const nombre = document.getElementById('nombre').value;
         const correo = document.getEelementById('correo').value;
@@ -16,6 +20,25 @@ document.addEventListener('DOMContentLoaded',()=>{
         const tipoUsuario = document.getElementById('tipo-usuario').value;
 
         const resultado = registroUsuario(nombre,correo,contrasena,tipoUsuario);
+
+        if(resultado === 'Registro exitoso , Ahora puede iniciar sesion'){
+            usuariosDB.push({nombre,correo,contrasena,tipoUsuario});
+        }
+
         resultadoDiv.textContent = resultado;
-    })
+    });
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const correo = document.getElementById('login-correo').value;
+      const contrasena = document.getElementById('login-contrasena').value;
+
+      const resultado = iniciarSesion(correo, contrasena, usuariosDB);
+      resultadoDiv.textContent = resultado.message;
+    });
+  }
+
+
 })
