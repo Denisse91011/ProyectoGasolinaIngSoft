@@ -66,5 +66,22 @@
     },
     "coverage": 0,
     "test_count": 10
+  },
+  {
+    "sha": "8f16b4c1ce077812d3131ff35b7718cfff74692b",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-26T22:24:31.000Z",
+      "message": "Pruebas Funcionales y corregidas con Registro e Inicio de Sesion Exitoso",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/8f16b4c1ce077812d3131ff35b7718cfff74692b"
+    },
+    "stats": {
+      "total": 184,
+      "additions": 131,
+      "deletions": 53,
+      "date": "2025-04-26"
+    },
+    "coverage": 0,
+    "test_count": 10
   }
 ]

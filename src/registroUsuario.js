@@ -1,11 +1,18 @@
-export function registroUsuario(nombre, correo, contraseña, tipoUsuario) {
-    if (!nombre || !correo || !contraseña || !tipoUsuario) {
-      return 'Por favor, complete todos los campos.';
-    }
-    const tiposValidos = ['Conductor', 'Operario'];
-    if (!tiposValidos.includes(tipoUsuario)) {
-      return 'Tipo de usuario inválido. Debe ser Conductor u Operario.';
-    }
-    return 'Registro exitoso. Ahora puede iniciar sesión.';
+let usuariosDB = []; // Asegúrate de inicializar usuariosDB
+
+export function registroUsuario(nombre, correo, contrasena, tipoUsuario) {
+  if (!nombre || !correo || !contrasena || !tipoUsuario) {
+    return { success: false, message: 'Por favor, complete todos los campos.' };
   }
-  
+
+  // Validar que no haya otro usuario con el mismo correo
+  const existeUsuario = usuariosDB.some(user => user.correo === correo);
+  if (existeUsuario) {
+    return { success: false, message: 'Este correo ya está registrado.' };
+  }
+
+  // Registrar nuevo usuario
+  const nuevoUsuario = { nombre, correo, contrasena, tipoUsuario };
+  usuariosDB.push(nuevoUsuario);
+  return { success: true, message: 'Registro exitoso. Ahora puede iniciar sesión.' };
+}
