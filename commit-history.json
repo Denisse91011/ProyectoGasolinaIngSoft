@@ -49,5 +49,22 @@
     },
     "coverage": 0,
     "test_count": 0
+  },
+  {
+    "sha": "3dde6b4f74e52207459130a61c2f6f536133cd20",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-26T02:45:25.000Z",
+      "message": "Correccion de posicion de archivos Inicio de Sesion Funcional y Pruebas Pasando",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/3dde6b4f74e52207459130a61c2f6f536133cd20"
+    },
+    "stats": {
+      "total": 9,
+      "additions": 6,
+      "deletions": 3,
+      "date": "2025-04-26"
+    },
+    "coverage": 0,
+    "test_count": 10
   }
 ]

@@ -1,7 +1,10 @@
-import {iniciarSesion} from './iniciarSesion.js'
-import { registroUsuario } from './registroUsuario.js';
+import './iniciarSesion.js'
+import './registroUsuario.js'
 import './solicitarTicketCarga'
 import './reportarIngresoGasolina'
+import {iniciarSesion} from './iniciarSesion.js'
+import { registroUsuario } from './registroUsuario.js';
+
 
 
 document.addEventListener('DOMContentLoaded',()=>{
