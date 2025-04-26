@@ -5,7 +5,7 @@ export function reportarIngresoGasolina(tipoCombustible, cantidad, fechaIngreso)
       message: 'La cantidad debe ser un número positivo mayor a cero.'
     };
   }
-    return {
+  return {
     success: true,
     message: 'Ingreso registrado correctamente.'
   };

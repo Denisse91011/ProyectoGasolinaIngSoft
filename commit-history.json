@@ -83,5 +83,22 @@
     },
     "coverage": 0,
     "test_count": 10
+  },
+  {
+    "sha": "3ff605e89582b043877ed46f9b8219051da31723",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-26T23:15:48.000Z",
+      "message": "pruebas de reportarIngresoGasolina y Front de reportes Gasolina funcional",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/3ff605e89582b043877ed46f9b8219051da31723"
+    },
+    "stats": {
+      "total": 108,
+      "additions": 87,
+      "deletions": 21,
+      "date": "2025-04-26"
+    },
+    "coverage": 0,
+    "test_count": 10
   }
 ]

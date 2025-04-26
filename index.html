@@ -7,16 +7,16 @@
     <h1>Registro de Usuario</h1>
     <form id="registro-form">
       <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" />
+      <input type="text" id="nombre" required />
 
       <label for="correo">Correo electrónico:</label>
-      <input type="email" id="correo" />
+      <input type="email" id="correo" required />
 
-      <label for="contrasena">Contraseña:</label> <!-- Aquí está bien -->
-      <input type="password" id="contrasena" />
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" required />
 
       <label for="tipo-usuario">Tipo de Usuario:</label>
-      <select id="tipo-usuario">
+      <select id="tipo-usuario" required>
         <option value="">Seleccione</option>
         <option value="Conductor">Conductor</option>
         <option value="Operario">Operario</option>
@@ -28,35 +28,38 @@
     <h1>Iniciar Sesión</h1>
     <form id="login-form">
       <label for="login-correo">Correo electrónico:</label>
-      <input type="email" id="login-correo" />
+      <input type="email" id="login-correo" required />
 
-      <label for="login-contrasena">Contraseña:</label> <!-- corregido -->
-      <input type="password" id="login-contrasena" />   <!-- corregido -->
+      <label for="login-contrasena">Contraseña:</label>
+      <input type="password" id="login-contrasena" required />
 
       <input type="submit" value="Iniciar Sesión" />
     </form>
 
     <div id="resultado-div"></div>
 
-    <script type="module" src="./src/presenter.js"></script>
-
     <h1>Reportar Ingreso de Gasolina</h1>
     <form id="Ingreso-form" style="display:none;">
       <label for="tipo-combustible">Tipo de Combustible:</label>
-      <input type="text" id="tipo-combustible" />
+      <input type="text" id="tipo-combustible" required />
 
       <label for="cantidad">Cantidad (litros):</label>
-      <input type="number" id="cantidad" />
+      <input type="number" id="cantidad" required />
 
       <label for="fecha">Fecha:</label>
-      <input type="date" id="fecha" />
+      <input type="date" id="fecha" required />
 
       <input type="submit" value="Reportar" />
     </form>
 
     <h2>Lista de Usuarios Registrados</h2>
-    <button id="mostrar-usuarios">Mostrar usuarios</button>
     <ul id="usuarios-lista"></ul>
 
+    <h2>Reporte de Ingresos de Gasolina</h2>
+    <div id="reporte-gasolina"></div>
+
+    <button id="limpiar-datos-btn">Limpiar Datos</button>
+
+    <script type="module" src="./src/presenter.js"></script>
   </body>
 </html>
