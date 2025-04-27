@@ -1,14 +1,14 @@
-export function solicitarTicketCarga(surtidor, tipoGasolina, cantidadSolicitada, inventarios) {
-  const surtidorDisponible = inventarios.find(item => item.surtidor === surtidor && item.tipoGasolina === tipoGasolina);
+export function solicitarTicketCarga(nombreUsuario, tipoGasolina, cantidadSolicitada, inventarios) {
+  const usuarioDisponible = inventarios.find(item => item.nombreUsuario === nombreUsuario && item.tipoGasolina === tipoGasolina);
 
-  if (!surtidorDisponible) {
+  if (!usuarioDisponible) {
     return {
       success: false,
-      message: 'Surtidor o tipo de gasolina no disponible.'
+      message: 'Usuario o tipo de gasolina no disponible.'
     };
   }
 
-  if (cantidadSolicitada > surtidorDisponible.cantidadDisponible) {
+  if (cantidadSolicitada > usuarioDisponible.cantidadDisponible) {
     return {
       success: false,
       message: 'Cantidad solicitada supera el inventario disponible. Intente con una cantidad menor.'
@@ -17,6 +17,6 @@ export function solicitarTicketCarga(surtidor, tipoGasolina, cantidadSolicitada,
 
   return {
     success: true,
-    message: `Ticket generado correctamente. Preséntelo en el surtidor seleccionado.`
+    message: `Ticket generado correctamente. Preséntelo con el nombre de usuario en el surtidor seleccionado.`
   };
 }

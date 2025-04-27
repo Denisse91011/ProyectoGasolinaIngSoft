@@ -100,5 +100,22 @@
     },
     "coverage": 0,
     "test_count": 10
+  },
+  {
+    "sha": "9e5ff6fb4a2d865634fbdc5e65b925832ec75c81",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-04-27T00:01:55.000Z",
+      "message": "Pruebas Pasando y Funcion SolicitarTicketCarga por Conductor Funcional",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/9e5ff6fb4a2d865634fbdc5e65b925832ec75c81"
+    },
+    "stats": {
+      "total": 144,
+      "additions": 107,
+      "deletions": 37,
+      "date": "2025-04-27"
+    },
+    "coverage": 0,
+    "test_count": 10
   }
 ]
