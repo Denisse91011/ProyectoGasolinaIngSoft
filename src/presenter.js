@@ -2,6 +2,7 @@ import { iniciarSesion } from './iniciarSesion.js';
 import { registroUsuario } from './registroUsuario.js';
 import { reportarIngresoGasolina } from './reportarIngresoGasolina.js';
 import { solicitarTicketCarga } from './solicitarTicketCarga.js';
+import { EstimarTiempoDeEspera } from './EstimarTiempoDeEspera.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const registroForm = document.getElementById('registro-form');
@@ -13,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const limpiarDatosBtn = document.getElementById('limpiar-datos-btn');
   const tituloReporteGasolina = document.querySelector('h1#titulo-reporte-gasolina');
   const ticketForm = document.getElementById('ticket-form');
-  const reporteTicketsDiv = document.getElementById('reporte-tickets');  // Sección para mostrar los tickets de carga
+  const reporteTicketsDiv = document.getElementById('reporte-tickets');  // Sección para mostrar los tickets de carg
+  const estimarTiempoForm = document.getElementById('estimar-tiempo-form');
+  const resultadoEstimacionDiv = document.getElementById('resultado-estimacion');
 
   let usuariosDB = JSON.parse(localStorage.getItem('usuariosDB')) || [];
   let usuarioActual = null;
@@ -201,6 +204,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (limpiarDatosBtn) {
     limpiarDatosBtn.addEventListener('click', limpiarDatos);
+  }
+
+  if (estimarTiempoForm) {
+    estimarTiempoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+  
+      const numeroAutos = parseInt(document.getElementById('estimar-cant-autos').value);
+      const tiempoPromedioPorAuto = parseFloat(document.getElementById('estimar-prom-auto').value);
+  
+      const resultado = EstimarTiempoDeEspera(numeroAutos, tiempoPromedioPorAuto);
+  
+      if (resultado === 0) {
+        resultadoEstimacionDiv.textContent = 'Los valores deben ser mayores a cero.';
+      } else {
+        resultadoEstimacionDiv.textContent = `El tiempo estimado de espera es: ${resultado} minutos.`;
+      }
+    });
   }
 
   renderizarUsuarios();

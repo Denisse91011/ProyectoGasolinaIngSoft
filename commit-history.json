@@ -117,5 +117,22 @@
     },
     "coverage": 0,
     "test_count": 10
+  },
+  {
+    "sha": "152e24742fda7ff0b654d2568d3939231251a64f",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-04-29T03:02:03.000Z",
+      "message": "feat: Añadir funcion de estimar tiempo de espera para cargar",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/152e24742fda7ff0b654d2568d3939231251a64f"
+    },
+    "stats": {
+      "total": 48,
+      "additions": 47,
+      "deletions": 1,
+      "date": "2025-04-29"
+    },
+    "coverage": 0,
+    "test_count": 11
   }
 ]

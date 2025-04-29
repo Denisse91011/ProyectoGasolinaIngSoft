@@ -75,6 +75,19 @@
     <h2>Reporte de Ingresos de Gasolina</h2>
     <div id="reporte-gasolina"></div>
 
+    <h1>Estimar Tiempo de Espera</h1>
+<form id="estimar-tiempo-form">
+  <label for="estimar-cant-autos">Número de Autos:</label>
+  <input type="number" id="estimar-cant-autos" required />
+
+  <label for="estimar-prom-auto">Tiempo Promedio por Auto (minutos):</label>
+  <input type="number" id="estimar-prom-auto" required />
+
+  <input type="submit" value="Estimar Tiempo" />
+</form>
+
+<div id="resultado-estimacion"></div>
+
     <button id="limpiar-datos-btn">Limpiar Datos</button>
 
     <script type="module" src="./src/presenter.js"></script>
