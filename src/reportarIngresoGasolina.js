@@ -1,3 +1,4 @@
+
 export function reportarIngresoGasolina(tipoCombustible, cantidad, fechaIngreso) {
   if (cantidad <= 0) {
     return {
@@ -7,6 +8,7 @@ export function reportarIngresoGasolina(tipoCombustible, cantidad, fechaIngreso)
   }
   return {
     success: true,
-    message: 'Ingreso registrado correctamente.'
+    message: 'Ingreso registrado correctamente.',
+    data: { tipoCombustible, cantidad, fechaIngreso }
   };
 }

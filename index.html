@@ -1,42 +1,7 @@
 <!DOCTYPE html>
 <html xml:lang="es">
-  <head>
-    <title>Registro de Usuario</title>
-  </head>
+  
   <body>
-    <h1>Registro de Usuario</h1>
-    <form id="registro-form">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" required />
-
-      <label for="correo">Correo electrónico:</label>
-      <input type="email" id="correo" required />
-
-      <label for="contrasena">Contraseña:</label>
-      <input type="password" id="contrasena" required />
-
-      <label for="tipo-usuario">Tipo de Usuario:</label>
-      <select id="tipo-usuario" required>
-        <option value="">Seleccione</option>
-        <option value="Conductor">Conductor</option>
-        <option value="Operario">Operario</option>
-      </select>
-
-      <input type="submit" value="Registrarse" />
-    </form>
-
-    <h1>Iniciar Sesión</h1>
-    <form id="login-form">
-      <label for="login-correo">Correo electrónico:</label>
-      <input type="email" id="login-correo" required />
-
-      <label for="login-contrasena">Contraseña:</label>
-      <input type="password" id="login-contrasena" required />
-
-      <input type="submit" value="Iniciar Sesión" />
-    </form>
-
-    <div id="resultado-div"></div>
 
     <h1>Reportar Ingreso de Gasolina</h1>
     <form id="Ingreso-form" style="display:none;">
@@ -52,41 +17,10 @@
       <input type="submit" value="Reportar" />
     </form>
 
-    <h1 id="titulo-ticket-carga">Solicitar Ticket de Carga</h1>
-<form id="ticket-form" style="display:none;">
-  <label for="tipo-combustible">Tipo de Combustible:</label>
-  <input type="text" id="tipo-combustible" required />
-  <label for="cantidad">Cantidad (litros):</label>
-  <input type="number" id="cantidad" required />
-  <label for="fecha">Fecha:</label>
-  <input type="date" id="fecha" required />
-  <input type="submit" value="Solicitar Ticket de Carga" />
-</form>
-
-<h2 id="titulo-tickets-carga">Reporte de Tickets de Carga</h2>
-<div id="reporte-tickets">
-  <p>No se han solicitado tickets de carga.</p>
-</div>
-
-
-    <h2>Lista de Usuarios Registrados</h2>
-    <ul id="usuarios-lista"></ul>
-
     <h2>Reporte de Ingresos de Gasolina</h2>
     <div id="reporte-gasolina"></div>
 
-    <h1>Estimar Tiempo de Espera</h1>
-<form id="estimar-tiempo-form">
-  <label for="estimar-cant-autos">Número de Autos:</label>
-  <input type="number" id="estimar-cant-autos" required />
-
-  <label for="estimar-prom-auto">Tiempo Promedio por Auto (minutos):</label>
-  <input type="number" id="estimar-prom-auto" required />
-
-  <input type="submit" value="Estimar Tiempo" />
-</form>
-
-<div id="resultado-estimacion"></div>
+   
 
     <button id="limpiar-datos-btn">Limpiar Datos</button>
 

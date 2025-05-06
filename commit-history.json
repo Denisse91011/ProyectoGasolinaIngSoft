@@ -134,5 +134,22 @@
     },
     "coverage": 0,
     "test_count": 11
+  },
+  {
+    "sha": "27bfbceaab29fd28250e3e3924093c86058e68ac",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T01:03:54.000Z",
+      "message": "pruebas pasando con funcionalidad de reportarIngresoGasolina",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/27bfbceaab29fd28250e3e3924093c86058e68ac"
+    },
+    "stats": {
+      "total": 460,
+      "additions": 15,
+      "deletions": 445,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 2
   }
 ]
