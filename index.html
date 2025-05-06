@@ -13,6 +13,7 @@
 
     <label for="cantidad">Cantidad (litros):</label>
     <input type="number" id="cantidad" required />
+    <div id="mensaje-capacidad"></div>
 
     <label for="fecha">Fecha:</label>
     <input type="date" id="fecha" required />
@@ -23,27 +24,23 @@
   <h2>Reporte de Ingresos de Gasolina</h2>
   <div id="reporte-gasolina"></div>
 
-
   <h2>Consultar Stock</h2>
   <input type="text" id="tipo-stock" placeholder="Tipo de combustible" />
   <button id="consultar-stock-btn">Consultar Stock</button>
   <div id="resultado-stock"></div>
 
-  
   <h2>Agregar Surtidor</h2>
-<form id="surtidor-form">
-  <label for="nombre-surtidor">Nombre del Surtidor:</label>
-  <input type="text" id="nombre-surtidor" required />
+  <form id="surtidor-form">
+    <label for="nombre-surtidor">Nombre del Surtidor:</label>
+    <input type="text" id="nombre-surtidor" required />
 
-  <label for="tipo-surtidor">Tipo de Combustible:</label>
-  <input type="text" id="tipo-surtidor" required />
+    <label for="tipo-surtidor">Tipo de Combustible:</label>
+    <input type="text" id="tipo-surtidor" required />
 
-  <input type="submit" value="Agregar Surtidor" />
-</form>
+    <input type="submit" value="Agregar Surtidor" />
+  </form>
 
-<div id="reporte-surtidores"></div>
-
-
+  <div id="reporte-surtidores"></div>
 
   <script type="module" src="./src/presenter.js"></script>
 </body>

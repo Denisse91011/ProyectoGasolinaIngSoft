@@ -253,5 +253,22 @@
     },
     "coverage": 0,
     "test_count": 9
+  },
+  {
+    "sha": "8b7f94bceaca7c107f6677bf0d786c6117b0f559",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-06T03:51:16.000Z",
+      "message": "Refactor Funcion y pruebas Capacidad Surtidor implementadas",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/8b7f94bceaca7c107f6677bf0d786c6117b0f559"
+    },
+    "stats": {
+      "total": 103,
+      "additions": 77,
+      "deletions": 26,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 11
   }
 ]
