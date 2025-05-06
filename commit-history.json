@@ -304,5 +304,22 @@
     },
     "coverage": 0,
     "test_count": 14
+  },
+  {
+    "sha": "07b5c44ececda116763dfdfdbc1ae9f9c4924511",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T04:20:40.000Z",
+      "message": "implementacion del front en la funcion estimarAbastecimiento funcional",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/07b5c44ececda116763dfdfdbc1ae9f9c4924511"
+    },
+    "stats": {
+      "total": 54,
+      "additions": 54,
+      "deletions": 0,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 14
   }
 ]

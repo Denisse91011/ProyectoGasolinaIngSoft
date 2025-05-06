@@ -42,6 +42,22 @@
 
   <div id="reporte-surtidores"></div>
 
+  <h2>Estimar Abastecimiento</h2>
+<form id="estimacion-form">
+  <label for="tipo-estimacion">Tipo de Combustible:</label>
+  <input type="text" id="tipo-estimacion" required />
+
+  <label for="litros-auto">Litros por Auto:</label>
+  <input type="number" id="litros-auto" required />
+
+  <label for="cantidad-autos">Cantidad de Autos:</label>
+  <input type="number" id="cantidad-autos" required />
+
+  <input type="submit" value="Estimar" />
+</form>
+<div id="resultado-estimacion"></div>
+
+
   <script type="module" src="./src/presenter.js"></script>
 </body>
 </html>

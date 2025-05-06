@@ -2,6 +2,7 @@
 import { reportarIngresoGasolina, consultarStock } from './stockCombustible.js';
 import { agregarSurtidor } from './agregarSurtidor.js';
 import { validarCapacidadSurtidor, CAPACIDAD_MAXIMA } from './capacidadSurtidor.js';
+import { estimarAbastecimiento } from './estimacion.js';
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nombreSurtidorInput = document.getElementById('nombre-surtidor');
     const tipoSurtidorSelect = document.getElementById('tipo-surtidor');
     const tipoStockSelect = document.getElementById('tipo-stock');
+    const estimacionForm = document.getElementById('estimacion-form');
+    const tipoEstimacion = document.getElementById('tipo-estimacion');
+    const litrosAutoInput = document.getElementById('litros-auto');
+    const cantidadAutosInput = document.getElementById('cantidad-autos');
+    const resultadoEstimacionDiv = document.getElementById('resultado-estimacion');
 
   
     const surtidores = []; 
@@ -189,7 +195,39 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.error("Element with ID 'reporte-surtidores' not found for updating list.");
         }
+
+        if (estimacionForm && tipoEstimacion && litrosAutoInput && cantidadAutosInput && resultadoEstimacionDiv) {
+          estimacionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+        
+            const tipo = tipoEstimacion.value.trim();
+            const litrosPorAuto = parseFloat(litrosAutoInput.value);
+            const cantidadAutos = parseInt(cantidadAutosInput.value);
+        
+            if (!tipo || isNaN(litrosPorAuto) || isNaN(cantidadAutos)) {
+              resultadoEstimacionDiv.textContent = 'Por favor, ingrese valores válidos.';
+              return;
+            }
+        
+            const resultado = estimarAbastecimiento(tipo, litrosPorAuto, cantidadAutos);
+            
+            if (resultado.suficiente) {
+              resultadoEstimacionDiv.textContent = ` Stock suficiente. Se pueden abastecer ${cantidadAutos} autos.`;
+            } else {
+              resultadoEstimacionDiv.textContent = ` Stock insuficiente. Solo se pueden abastecer ${resultado.autosPosibles} autos.`;
+            }
+        
+            estimacionForm.reset();
+          });
+        } else {
+          console.error('Elementos del formulario de estimación no encontrados.');
+        }
+
+
     }
+    
+
+
 
     
 
