@@ -202,5 +202,22 @@
     },
     "coverage": 0,
     "test_count": 4
+  },
+  {
+    "sha": "9d6042bf68a8b4442741882fa39a120a57203281",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T02:28:04.000Z",
+      "message": "Funcion y pruebas de Consultar stock implementadas",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/9d6042bf68a8b4442741882fa39a120a57203281"
+    },
+    "stats": {
+      "total": 35,
+      "additions": 35,
+      "deletions": 0,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 6
   }
 ]
