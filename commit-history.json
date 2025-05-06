@@ -270,5 +270,22 @@
     },
     "coverage": 0,
     "test_count": 11
+  },
+  {
+    "sha": "26a0637af092db03d3b545961d10daefc8c60f7f",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-06T03:58:53.000Z",
+      "message": "Implemtenacion del front para la funcion Validar Capacidad Surtidor",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/26a0637af092db03d3b545961d10daefc8c60f7f"
+    },
+    "stats": {
+      "total": 253,
+      "additions": 179,
+      "deletions": 74,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 11
   }
 ]
