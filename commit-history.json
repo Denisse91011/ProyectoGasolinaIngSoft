@@ -185,5 +185,22 @@
     },
     "coverage": 0,
     "test_count": 4
+  },
+  {
+    "sha": "e5f7f144434a99fca3f3ca5ba94347fbf3b872a7",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T01:39:36.000Z",
+      "message": "agregar  surtidor con su tipo de gasolina - Front",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/e5f7f144434a99fca3f3ca5ba94347fbf3b872a7"
+    },
+    "stats": {
+      "total": 44,
+      "additions": 40,
+      "deletions": 4,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 4
   }
 ]
