@@ -236,5 +236,22 @@
     },
     "coverage": 0,
     "test_count": 6
+  },
+  {
+    "sha": "e428faaf75853a632531c8532bb4ddb3a868fde2",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-06T03:05:03.000Z",
+      "message": "Funcion y pruebas Capacidad Surtidor implementadas",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/e428faaf75853a632531c8532bb4ddb3a868fde2"
+    },
+    "stats": {
+      "total": 22,
+      "additions": 22,
+      "deletions": 0,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 9
   }
 ]
