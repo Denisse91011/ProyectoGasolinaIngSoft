@@ -168,5 +168,22 @@
     },
     "coverage": 0,
     "test_count": 2
+  },
+  {
+    "sha": "79a14df3728ca6fc4b48321ea8756d5646bd9b3f",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T01:27:07.000Z",
+      "message": "Pruebas y funcion pasando con funcion agregarSurtidor",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/79a14df3728ca6fc4b48321ea8756d5646bd9b3f"
+    },
+    "stats": {
+      "total": 40,
+      "additions": 40,
+      "deletions": 0,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 4
   }
 ]
