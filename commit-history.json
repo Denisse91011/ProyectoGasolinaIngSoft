@@ -219,5 +219,22 @@
     },
     "coverage": 0,
     "test_count": 6
+  },
+  {
+    "sha": "9d5c6fe574c82d80990a9dc2b6b40b9b6a319cfe",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T02:49:53.000Z",
+      "message": "Implementacion del front en funcionalidad Consultar Stock",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/9d5c6fe574c82d80990a9dc2b6b40b9b6a319cfe"
+    },
+    "stats": {
+      "total": 19,
+      "additions": 18,
+      "deletions": 1,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 6
   }
 ]

@@ -1,9 +1,10 @@
 import { reportarIngresoGasolina } from './reportarIngresoGasolina.js';
 import { agregarSurtidor } from './agregarSurtidor.js';
+import { reportarIngresoGasolina, consultarStock } from './stockCombustible.js';
+
 
 const form = document.getElementById('Ingreso-form');
 const reporteDiv = document.getElementById('reporte-gasolina');
-const limpiarBtn = document.getElementById('limpiar-datos-btn');
 const surtidorForm = document.getElementById('surtidor-form');
 const reporteSurtidores = document.getElementById('reporte-surtidores');
 const surtidores = [];
@@ -51,3 +52,12 @@ function actualizarVistaSurtidores() {
   ).join('');
 }
 
+
+const consultarStockBtn = document.getElementById('consultar-stock-btn');
+const resultadoStockDiv = document.getElementById('resultado-stock');
+
+consultarStockBtn.addEventListener('click', () => {
+  const tipo = document.getElementById('tipo-stock').value.trim();
+  const cantidad = consultarStock(tipo);
+  resultadoStockDiv.textContent = `Stock actual de "${tipo}": ${cantidad} litros.`;
+});
