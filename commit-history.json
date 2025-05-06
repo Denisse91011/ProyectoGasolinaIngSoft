@@ -151,5 +151,22 @@
     },
     "coverage": 0,
     "test_count": 2
+  },
+  {
+    "sha": "2d0570b93f09e10926ef896f0544a4b5d20c79ed",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-06T01:06:19.000Z",
+      "message": "Implementacion de Front en reportarIngresoGasolina.js",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/2d0570b93f09e10926ef896f0544a4b5d20c79ed"
+    },
+    "stats": {
+      "total": 71,
+      "additions": 51,
+      "deletions": 20,
+      "date": "2025-05-06"
+    },
+    "coverage": 0,
+    "test_count": 2
   }
 ]

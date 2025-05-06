@@ -1,29 +1,30 @@
 <!DOCTYPE html>
-<html xml:lang="es">
-  
-  <body>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reporte de Gasolina</title>
+</head>
+<body>
+  <h1>Reportar Ingreso de Gasolina</h1>
 
-    <h1>Reportar Ingreso de Gasolina</h1>
-    <form id="Ingreso-form" style="display:none;">
-      <label for="tipo-combustible">Tipo de Combustible:</label>
-      <input type="text" id="tipo-combustible" required />
+  <form id="Ingreso-form">
+    <label for="tipo-combustible">Tipo de Combustible:</label>
+    <input type="text" id="tipo-combustible" required />
 
-      <label for="cantidad">Cantidad (litros):</label>
-      <input type="number" id="cantidad" required />
+    <label for="cantidad">Cantidad (litros):</label>
+    <input type="number" id="cantidad" required />
 
-      <label for="fecha">Fecha:</label>
-      <input type="date" id="fecha" required />
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" required />
 
-      <input type="submit" value="Reportar" />
-    </form>
+    <input type="submit" value="Reportar" />
+  </form>
 
-    <h2>Reporte de Ingresos de Gasolina</h2>
-    <div id="reporte-gasolina"></div>
+  <h2>Reporte de Ingresos de Gasolina</h2>
+  <div id="reporte-gasolina"></div>
 
-   
+  <button id="limpiar-datos-btn">Limpiar Datos</button>
 
-    <button id="limpiar-datos-btn">Limpiar Datos</button>
-
-    <script type="module" src="./src/presenter.js"></script>
-  </body>
+  <script type="module" src="./src/presenter.js"></script>
+</body>
 </html>
