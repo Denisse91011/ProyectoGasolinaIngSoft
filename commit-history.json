@@ -321,5 +321,22 @@
     },
     "coverage": 0,
     "test_count": 14
+  },
+  {
+    "sha": "b270016ff4d3b24426df2e2da20bf68f16c0c9f1",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-15T14:19:29.000Z",
+      "message": "refactoring: Agregar clase para los metodos del surtidor",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/b270016ff4d3b24426df2e2da20bf68f16c0c9f1"
+    },
+    "stats": {
+      "total": 96,
+      "additions": 96,
+      "deletions": 0,
+      "date": "2025-05-15"
+    },
+    "coverage": 0,
+    "test_count": 14
   }
 ]
