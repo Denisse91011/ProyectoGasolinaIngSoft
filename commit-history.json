@@ -372,5 +372,22 @@
     },
     "coverage": 0,
     "test_count": 24
+  },
+  {
+    "sha": "a3e8d909ed71d42cb7c43f0ea6ef0d3c05ed5633",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-18T16:57:30.000Z",
+      "message": "funcion solicitar ticket en front implementada con pruebas pasando",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/a3e8d909ed71d42cb7c43f0ea6ef0d3c05ed5633"
+    },
+    "stats": {
+      "total": 277,
+      "additions": 246,
+      "deletions": 31,
+      "date": "2025-05-18"
+    },
+    "coverage": 0,
+    "test_count": 24
   }
 ]
