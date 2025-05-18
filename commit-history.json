@@ -355,5 +355,22 @@
     },
     "coverage": 0,
     "test_count": 18
+  },
+  {
+    "sha": "194dcaa1c67cd1da20dfb60d0175e5777f4089f3",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-18T16:23:06.000Z",
+      "message": "pruebas y funcion pasando solicitar ticket",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/194dcaa1c67cd1da20dfb60d0175e5777f4089f3"
+    },
+    "stats": {
+      "total": 133,
+      "additions": 133,
+      "deletions": 0,
+      "date": "2025-05-18"
+    },
+    "coverage": 0,
+    "test_count": 24
   }
 ]
