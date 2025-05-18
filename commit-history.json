@@ -389,5 +389,22 @@
     },
     "coverage": 0,
     "test_count": 24
+  },
+  {
+    "sha": "9aad88ec50a60005673c179c9a66c098def25e74",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-18T17:02:12.000Z",
+      "message": "historial de visualizaciones implementada",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/9aad88ec50a60005673c179c9a66c098def25e74"
+    },
+    "stats": {
+      "total": 8,
+      "additions": 2,
+      "deletions": 6,
+      "date": "2025-05-18"
+    },
+    "coverage": 0,
+    "test_count": 24
   }
 ]

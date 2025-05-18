@@ -1,4 +1,3 @@
-// src/presenter.js
 import { surtidor, CAPACIDAD_MAXIMA } from './surtidor.js';
 import { generarTicketCarga } from './usuario.js';
 
@@ -6,7 +5,6 @@ import { generarTicketCarga } from './usuario.js';
 const surtidores = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Referencias a elementos HTML existentes ---
   const formIngreso = document.getElementById('Ingreso-form');
   const selectSurtidorIngreso = document.getElementById('select-surtidor-ingreso');
   const cantidadInput = document.getElementById('cantidad');
@@ -30,17 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const cantidadAutosInput = document.getElementById('cantidad-autos');
   const resultadoEstimacionDiv = document.getElementById('resultado-estimacion');
 
- // --- Referencias a NUEVOS elementos HTML para el Ticket ---
   const ticketForm = document.getElementById('ticket-form');
-  const selectSurtidorTicket = document.getElementById('select-surtidor-ticket'); // Select de surtidor para ticket
+  const selectSurtidorTicket = document.getElementById('select-surtidor-ticket'); 
   const ticketCantidadInput = document.getElementById('ticket-cantidad');
-  const ticketCantidadMensajeDiv = document.getElementById('ticket-cantidad-mensaje'); // Div para mensaje de cantidad del ticket
+  const ticketCantidadMensajeDiv = document.getElementById('ticket-cantidad-mensaje'); 
   const ticketFechaInput = document.getElementById('ticket-fecha');
   const ticketPlacaInput = document.getElementById('ticket-placa');
   const ticketResultadoDiv = document.getElementById('ticket-resultado'); 
   const ticketHistoryDiv = document.getElementById('ticket-history'); 
 
-  // --- Funciones existentes ---
   function encontrarSurtidorPorNombre(nombre) {
     if (!nombre) return null;
      const nombreNormalizado = nombre.trim().toLowerCase();
