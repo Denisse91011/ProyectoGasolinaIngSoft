@@ -2,60 +2,135 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Reporte de Gasolina</title>
+  <title>Gestión de Gasolinera</title>
+   <style>
+    /* Estilos básicos opcionales para mejorar la presentación */
+    body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #f4f4f4;}
+    h1, h2, h3 { color: #333; margin-bottom: 10px;}
+    form { margin-bottom: 20px; padding: 20px; border: 1px solid #020202; border-radius: 5px; background-color: #fff;}
+    label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+    input[type="text"], input[type="number"], input[type="date"], select, button {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: calc(100% - 22px);
+      box-sizing: border-box; 
+      font-size: 1em;
+    }
+    input[type="submit"], button {
+         width: auto;
+         cursor: pointer;
+         background-color: #28328b;
+         color: white;
+         border: none;
+         padding: 10px 20px;
+         border-radius: 4px;
+         margin-right: 10px; 
+         font-size: 1em;
+    }
+    input[type="submit"]:hover, button:hover {
+        background-color: #0056b3;
+    }
+    #mensaje-capacidad {
+      font-size: 0.9em;
+      color: #d9534f; 
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+     #mensaje-capacidad.valid { 
+         color: #5cb85c;
+     }
+    .report-output { 
+      margin-top: 15px;
+      padding: 15px;
+      border: 1px dashed #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      white-space: pre-wrap; 
+      word-wrap: break-word; 
+    }
+    #reporte-surtidores p { margin: 5px 0; border-bottom: 1px dotted #eee; padding-bottom: 5px;}
+     #reporte-surtidores p:last-child { border-bottom: none; }
+
+     hr { margin: 40px 0; border: none; border-top: 1px solid #ccc; }
+  </style>
 </head>
 <body>
-  <h1>Reportar Ingreso de Gasolina</h1>
+  <h1>Gestión de Gasolinera</h1>
 
-  <form id="Ingreso-form">
-    <label for="tipo-combustible">Tipo de Combustible:</label>
-    <input type="text" id="tipo-combustible" required />
+  <section id="agregar-surtidor-section">
+      <h2>Agregar Nuevo Surtidor</h2>
+      <form id="surtidor-form">
+        <label for="nombre-surtidor">Nombre del Surtidor:</label>
+        <input type="text" id="nombre-surtidor" required placeholder="Ej: Surtidor Diesel 1" />
 
-    <label for="cantidad">Cantidad (litros):</label>
-    <input type="number" id="cantidad" required />
-    <div id="mensaje-capacidad"></div>
+        <label for="tipo-surtidor">Tipo de Combustible:</label>
+        <input type="text" id="tipo-surtidor" required placeholder="Ej: Gasolina 95, Diesel" />
 
-    <label for="fecha">Fecha:</label>
-    <input type="date" id="fecha" required />
+        <input type="submit" value="Agregar Surtidor" />
+      </form>
+       <h3>Surtidores Agregados</h3>
+       <div id="reporte-surtidores" class="report-output"></div> 
+  </section>
 
-    <input type="submit" value="Reportar" />
-  </form>
+    <hr>
 
-  <h2>Reporte de Ingresos de Gasolina</h2>
-  <div id="reporte-gasolina"></div>
+  <section id="ingreso-gasolina-section">
+      <h2>Reportar Ingreso de Gasolina</h2>
 
-  <h2>Consultar Stock</h2>
-  <input type="text" id="tipo-stock" placeholder="Tipo de combustible" />
-  <button id="consultar-stock-btn">Consultar Stock</button>
-  <div id="resultado-stock"></div>
+      <form id="Ingreso-form">
+        <label for="select-surtidor-ingreso">Seleccionar Surtidor:</label>
+        <select id="select-surtidor-ingreso" required>
+          <option value="">-- Seleccione un surtidor --</option>
+        </select>
 
-  <h2>Agregar Surtidor</h2>
-  <form id="surtidor-form">
-    <label for="nombre-surtidor">Nombre del Surtidor:</label>
-    <input type="text" id="nombre-surtidor" required />
+        <label for="cantidad">Cantidad (litros):</label>
+        <input type="number" id="cantidad" required min="0.01" step="0.01" /> 
+        <div id="mensaje-capacidad"></div> 
 
-    <label for="tipo-surtidor">Tipo de Combustible:</label>
-    <input type="text" id="tipo-surtidor" required />
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" required />
 
-    <input type="submit" value="Agregar Surtidor" />
-  </form>
+        <input type="submit" id="Reportar" value="Reportar Ingreso" />
+      </form>
 
-  <div id="reporte-surtidores"></div>
+      <h3>Reporte de Ingresos</h3>
+      <div id="reporte-gasolina" class="report-output"></div>
+   </section>
 
-  <h2>Estimar Abastecimiento</h2>
-<form id="estimacion-form">
-  <label for="tipo-estimacion">Tipo de Combustible:</label>
-  <input type="text" id="tipo-estimacion" required />
+    <hr>
 
-  <label for="litros-auto">Litros por Auto:</label>
-  <input type="number" id="litros-auto" required />
+  <section id="consultar-stock-section">
+      <h2>Consultar Stock</h2>
+      <label for="select-surtidor-stock">Seleccionar Surtidor:</label>
+      <select id="select-surtidor-stock" required>
+        <option value="">-- Seleccione un surtidor --</option>
+      </select>
+      <button id="consultar-stock-btn">Consultar Stock</button>
+      <div id="resultado-stock" class="report-output"></div>
+  </section>
 
-  <label for="cantidad-autos">Cantidad de Autos:</label>
-  <input type="number" id="cantidad-autos" required />
+    <hr>
 
-  <input type="submit" value="Estimar" />
-</form>
-<div id="resultado-estimacion"></div>
+  <section id="estimar-abastecimiento-section">
+      <h2>Estimar Abastecimiento</h2>
+    <form id="estimacion-form">
+      <label for="select-surtidor-estimacion">Seleccionar Surtidor:</label>
+      <select id="select-surtidor-estimacion" required>
+        <option value="">-- Seleccione un surtidor --</option>
+      </select>
+
+      <label for="litros-auto">Litros por Auto (promedio):</label>
+      <input type="number" id="litros-auto" required min="0" step="0.01" />
+
+      <label for="cantidad-autos">Cantidad de Autos:</label>
+      <input type="number" id="cantidad-autos" required min="0" step="1" />
+
+      <input type="submit" value="Estimar Abastecimiento" />
+    </form>
+    <div id="resultado-estimacion" class="report-output"></div>
+  </section>
 
 
   <script type="module" src="./src/presenter.js"></script>

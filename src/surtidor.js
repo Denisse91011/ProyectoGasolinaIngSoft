@@ -1,96 +1,49 @@
+export const CAPACIDAD_MAXIMA = 10000;
+
 export class surtidor {
   constructor(nombre, tipoCombustible) {
     this.nombre = nombre;
     this.tipoCombustible = tipoCombustible;
-    this.ingresos = [];
-    this.CAPACIDAD_MAXIMA = 10000;
+    this.stock = 0;
+    this.historialIngresos = [];
   }
 
   agregarSurtidor() {
     if (!this.nombre || !this.tipoCombustible) {
-      return {
-        success: false,
-        message: 'Debe proporcionar nombre y tipo de combustible del surtidor.'
-      };
+      return "Por favor, complete todos los campos.";
     }
 
-    return {
-      success: true,
-      message: 'Surtidor agregado correctamente.',
-      data: {
-        nombre: this.nombre,
-        tipoCombustible: this.tipoCombustible
-      }
-    };
+    return `Surtidor ${this.nombre} de tipo ${this.tipoCombustible} agregado correctamente.`;
   }
 
-  validarCapacidadSurtidor(cantidad) {
-    if (typeof cantidad !== 'number') {
-      return { valid: false, message: 'La cantidad debe ser un número.' };
-    }
-    if (cantidad <= 0) {
-      return { valid: false, message: 'La cantidad debe ser positiva.' };
-    }
-    if (cantidad > this.CAPACIDAD_MAXIMA) {
-      return {
-        valid: false,
-        message: `Error: La cantidad excede la capacidad máxima de ${this.CAPACIDAD_MAXIMA} litros.`
-      };
+  reportarIngresoGasolina(cantidad, fecha) {
+    if (cantidad <= 0 || !fecha) {
+      return "Por favor, ingrese una cantidad válida y una fecha.";
     }
 
-    return {
-      valid: true,
-      message: `Capacidad válida. Máxima: ${this.CAPACIDAD_MAXIMA} litros.`
-    };
-  }
-
-  reportarIngresoGasolina(cantidad, fechaIngreso) {
-    if (cantidad <= 0) {
-      return {
-        success: false,
-        message: 'La cantidad debe ser un número positivo mayor a cero.'
-      };
+    if (!this.validarCapacidadSurtidor(cantidad)) {
+      return "La cantidad ingresada excede la capacidad máxima del surtidor.";
     }
 
-    this.ingresos.push({
-      tipoCombustible: this.tipoCombustible,
-      cantidad,
-      fechaIngreso
-    });
-
-    return {
-      success: true,
-      message: 'Ingreso registrado correctamente.',
-      data: {
-        tipoCombustible: this.tipoCombustible,
-        cantidad,
-        fechaIngreso
-      }
-    };
+    this.stock += cantidad;
+    this.historialIngresos.push({ cantidad, fecha });
+    return `Ingreso de ${cantidad} litros registrado correctamente para el surtidor ${this.nombre}.`;
   }
 
   consultarStock() {
-    return this.ingresos
-      .filter(i => i.tipoCombustible === this.tipoCombustible)
-      .reduce((total, i) => total + i.cantidad, 0);
+    return this.stock;
+  }
+
+  validarCapacidadSurtidor(cantidad) {
+    return (this.stock + cantidad <= CAPACIDAD_MAXIMA);
   }
 
   estimarAbastecimiento(litrosPorAuto, cantidadAutos) {
-    const stock = this.consultarStock();
-
-    if (litrosPorAuto <= 0 || cantidadAutos <= 0) {
-      return {
-        suficiente: false,
-        autosPosibles: 0
-      };
-    }
-
     const litrosNecesarios = litrosPorAuto * cantidadAutos;
-    const autosPosibles = Math.floor(stock / litrosPorAuto);
-
-    return {
-      suficiente: stock >= litrosNecesarios,
-      autosPosibles
-    };
+    if (this.stock >= litrosNecesarios) {
+      return `Se puede abastecer a los ${cantidadAutos} autos.`;
+    } else {
+      return `No hay suficiente stock para abastecer a los ${cantidadAutos} autos.`;
+    }
   }
 }

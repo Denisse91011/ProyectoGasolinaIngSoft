@@ -338,5 +338,22 @@
     },
     "coverage": 0,
     "test_count": 14
+  },
+  {
+    "sha": "a50eb4c8bca169a731819d6ebddcbe0f6c3e1bf6",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-18T15:50:33.000Z",
+      "message": "HU9-Refactoring_Sprint_1",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/a50eb4c8bca169a731819d6ebddcbe0f6c3e1bf6"
+    },
+    "stats": {
+      "total": 1152,
+      "additions": 605,
+      "deletions": 547,
+      "date": "2025-05-18"
+    },
+    "coverage": 0,
+    "test_count": 18
   }
 ]

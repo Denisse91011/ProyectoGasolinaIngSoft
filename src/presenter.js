@@ -1,234 +1,284 @@
+import { surtidor, CAPACIDAD_MAXIMA } from './surtidor.js'; 
 
-import { reportarIngresoGasolina, consultarStock } from './stockCombustible.js';
-import { agregarSurtidor } from './agregarSurtidor.js';
-import { validarCapacidadSurtidor, CAPACIDAD_MAXIMA } from './capacidadSurtidor.js';
-import { estimarAbastecimiento } from './estimacion.js';
-
+const surtidores = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+  const formIngreso = document.getElementById('Ingreso-form');
+  const selectSurtidorIngreso = document.getElementById('select-surtidor-ingreso');
+  const cantidadInput = document.getElementById('cantidad');
+  const mensajeCapacidad = document.getElementById('mensaje-capacidad');
+  const fechaInput = document.getElementById('fecha');
+  const reporteDiv = document.getElementById('reporte-gasolina');
 
-   
-    const form = document.getElementById('Ingreso-form');
-    const cantidadInput = document.getElementById('cantidad');
-    const mensajeCapacidad = document.getElementById('mensaje-capacidad');
-    const reporteDiv = document.getElementById('reporte-gasolina');
-    const surtidorForm = document.getElementById('surtidor-form');
-    const reporteSurtidores = document.getElementById('reporte-surtidores');
-    const consultarStockBtn = document.getElementById('consultar-stock-btn');
-    const resultadoStockDiv = document.getElementById('resultado-stock');
-    const tipoCombustibleSelect = document.getElementById('tipo-combustible');
-    const fechaInput = document.getElementById('fecha');
-    const nombreSurtidorInput = document.getElementById('nombre-surtidor');
-    const tipoSurtidorSelect = document.getElementById('tipo-surtidor');
-    const tipoStockSelect = document.getElementById('tipo-stock');
-    const estimacionForm = document.getElementById('estimacion-form');
-    const tipoEstimacion = document.getElementById('tipo-estimacion');
-    const litrosAutoInput = document.getElementById('litros-auto');
-    const cantidadAutosInput = document.getElementById('cantidad-autos');
-    const resultadoEstimacionDiv = document.getElementById('resultado-estimacion');
+  const surtidorForm = document.getElementById('surtidor-form');
+  const nombreSurtidorInput = document.getElementById('nombre-surtidor');
+  const tipoSurtidorInput = document.getElementById('tipo-surtidor'); 
+  const reporteSurtidores = document.getElementById('reporte-surtidores');
 
+  const consultarStockBtn = document.getElementById('consultar-stock-btn');
   
-    const surtidores = []; 
+  const selectSurtidorStock = document.getElementById('select-surtidor-stock');
+  const resultadoStockDiv = document.getElementById('resultado-stock');
 
-    
+  const estimacionForm = document.getElementById('estimacion-form');
+  const selectSurtidorEstimacion = document.getElementById('select-surtidor-estimacion');
+  const litrosAutoInput = document.getElementById('litros-auto');
+  const cantidadAutosInput = document.getElementById('cantidad-autos');
+  const resultadoEstimacionDiv = document.getElementById('resultado-estimacion');
+
+
+
+  function encontrarSurtidorPorNombre(nombre) {
+    if (!nombre) return null;
+     const nombreNormalizado = nombre.trim().toLowerCase();
+    return surtidores.find(s => s.nombre.trim().toLowerCase() === nombreNormalizado);
+  }
+
+  function validarCapacidadParaSurtidorSeleccionado(cantidad, surtidor) {
+      if (!surtidor) {
+         
+           return { valid: false, message: ' Por favor, seleccione un surtidor.' };
+      }
+
+      if (cantidad < 0.01) { 
+          return { valid: false, message: ' La cantidad debe ser positiva.' };
+      }
+
+      const esValido = surtidor.validarCapacidadSurtidor(cantidad);
+       if (!esValido) {
+           const espacioDisponible = CAPACIDAD_MAXIMA - surtidor.stock;
+           return { valid: false, message: ` Capacidad excedida para "${surtidor.nombre}". Espacio disponible: ${espacioDisponible} l.` };
+       }
+       return { valid: true, message: `✔ Capacidad OK para "${surtidor.nombre}".` };
+  }
+
+  function populateSurtidorSelects() {
+       const selectsToUpdate = [selectSurtidorIngreso, selectSurtidorStock, selectSurtidorEstimacion];
+
+       selectsToUpdate.forEach(selectElement => {
+           if (!selectElement) return; 
+
+           const selectedValue = selectElement.value;
+
+           selectElement.innerHTML = '<option value="">-- Seleccione un surtidor --</option>';
+
+           surtidores.forEach(surtidor => {
+               const option = document.createElement('option');
+               option.value = surtidor.nombre; 
+               option.textContent = `${surtidor.nombre} (${surtidor.tipoCombustible})`; 
+               selectElement.appendChild(option);
+           });
+
+           if (selectedValue && selectElement.querySelector(`option[value="${selectedValue}"]`)) {
+                selectElement.value = selectedValue;
+           }
+       });
+  }
+
+
+  function actualizarVistaSurtidores() {
+    if (!reporteSurtidores) return;
+
+    if (surtidores.length === 0) {
+         reporteSurtidores.innerHTML = '<p>No hay surtidores agregados aún.</p>';
+    } else {
+        reporteSurtidores.innerHTML = surtidores.map(s =>
+          `<p><strong>${s?.nombre || 'N/A'}</strong> - ${s?.tipoCombustible || 'N/A'} (Stock: ${s?.stock || 0} l)</p>`
+        ).join('');
+    }
+     populateSurtidorSelects();
+  }
+
+
+ 
+   const updateCapacidadMessage = () => {
+       const cantidad = parseFloat(cantidadInput?.value.trim());
+       const surtidorSeleccionadoNombre = selectSurtidorIngreso?.value;
+       const surtidorSeleccionado = encontrarSurtidorPorNombre(surtidorSeleccionadoNombre);
+
+       if (!mensajeCapacidad) return; 
+
+       if (!surtidorSeleccionadoNombre) {
+            mensajeCapacidad.textContent = 'Seleccione un surtidor para validar capacidad.';
+             mensajeCapacidad.className = ''; 
+            return;
+       }
+
+       if (isNaN(cantidad)) {
+            mensajeCapacidad.textContent = 'Ingrese una cantidad numérica válida.';
+             mensajeCapacidad.className = '';
+            return;
+       }
+        if (cantidad < 0.01) {
+             mensajeCapacidad.textContent = 'La cantidad debe ser positiva.';
+             mensajeCapacidad.className = '';
+             return;
+        }
+
+
+       const validacion = validarCapacidadParaSurtidorSeleccionado(cantidad, surtidorSeleccionado);
+       mensajeCapacidad.textContent = validacion.message;
+       
+       mensajeCapacidad.className = validacion.valid ? 'valid' : 'invalid'; 
+   };
+
+    cantidadInput?.addEventListener('input', updateCapacidadMessage);
+    selectSurtidorIngreso?.addEventListener('change', updateCapacidadMessage); 
+
+
+  surtidorForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre = nombreSurtidorInput?.value.trim();
+    const tipo = tipoSurtidorInput?.value.trim(); 
+
+    if (!nombre || !tipo) {
+      alert('Por favor, ingrese nombre y tipo para el surtidor.');
+      return;
+    }
+
+    if (encontrarSurtidorPorNombre(nombre)) {
+         alert(`Ya existe un surtidor con el nombre "${nombre}". Por favor, elija un nombre diferente.`);
+         return;
+    }
+
+    const nuevoSurtidor = new surtidor(nombre, tipo);
+
+    surtidores.push(nuevoSurtidor);
+
+    actualizarVistaSurtidores();
+
+    alert(`Surtidor "${nombre}" de tipo "${tipo}" agregado correctamente.`);
+
+    surtidorForm.reset();
+     if (mensajeCapacidad) {
+         mensajeCapacidad.textContent = 'Capacidad máxima global: ' + CAPACIDAD_MAXIMA + ' litros';
+         mensajeCapacidad.className = ''; 
+     }
+  });
+
+
+  formIngreso?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const surtidorSeleccionadoNombre = selectSurtidorIngreso?.value;
+    const cantidad = parseFloat(cantidadInput?.value);
+    const fecha = fechaInput?.value;
+
+    if (!surtidorSeleccionadoNombre) {
+         alert('Error: Por favor, seleccione un surtidor.');
+         return;
+    }
+
+    const surtidorSeleccionado = encontrarSurtidorPorNombre(surtidorSeleccionadoNombre);
+
+    if (!surtidorSeleccionado) {
+        alert(`Error interno: No se encontró la instancia del surtidor "${surtidorSeleccionadoNombre}".`);
+        return;
+    }
+
+    if (isNaN(cantidad) || cantidad <= 0) {
+        alert('Error: La cantidad debe ser un número positivo.');
+        return;
+    }
+     if (!fecha) {
+         alert('Error: Por favor, seleccione una fecha.');
+         return;
+     }
+
+      if (!surtidorSeleccionado.validarCapacidadSurtidor(cantidad)) {
+          const espacioDisponible = CAPACIDAD_MAXIMA - surtidorSeleccionado.stock;
+         alert(`Error: La cantidad de ${cantidad} litros excede la capacidad del surtidor "${surtidorSeleccionado.nombre}" (${surtidorSeleccionado.stock}/${CAPACIDAD_MAXIMA} l). Espacio disponible: ${espacioDisponible} l.`);
+         return;
+      }
+
+
+    const resultadoReporte = surtidorSeleccionado.reportarIngresoGasolina(cantidad, fecha);
+
+    if (reporteDiv) {
+        const entrada = document.createElement('p');
+        entrada.textContent = resultadoReporte;
+        reporteDiv.appendChild(entrada);
+    }
+
+
+    formIngreso.reset();
+    actualizarVistaSurtidores(); 
+     if (mensajeCapacidad) {
+        mensajeCapacidad.textContent = 'Seleccione un surtidor para validar capacidad.';
+         mensajeCapacidad.className = '';
+     }
+
+
+  });
+
+
+  consultarStockBtn?.addEventListener('click', () => {
+    const surtidorSeleccionadoNombre = selectSurtidorStock?.value; 
+
+    if (!surtidorSeleccionadoNombre) {
+      if (resultadoStockDiv) resultadoStockDiv.textContent = 'Por favor, seleccione un surtidor.';
+      return;
+    }
+
+    const surtidorSeleccionado = encontrarSurtidorPorNombre(surtidorSeleccionadoNombre);
+
+     if (!surtidorSeleccionado) {
+        if (resultadoStockDiv) resultadoStockDiv.textContent = `Error interno: No se encontró la instancia del surtidor "${surtidorSeleccionadoNombre}".`;
+        return;
+     }
+
+    const cantidad = surtidorSeleccionado.consultarStock();
+
+    if (resultadoStockDiv) {
+      resultadoStockDiv.textContent = `Stock actual del surtidor "${surtidorSeleccionado.nombre}" (${surtidorSeleccionado.tipoCombustible}): ${cantidad} litros.`;
+    }
+  });
+
+
+  estimacionForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const surtidorSeleccionadoNombre = selectSurtidorEstimacion?.value; 
+    const litrosPorAuto = parseFloat(litrosAutoInput?.value);
+    const cantidadAutos = parseInt(cantidadAutosInput?.value);
+
+    if (!surtidorSeleccionadoNombre) {
+         if (resultadoEstimacionDiv) resultadoEstimacionDiv.textContent = 'Por favor, seleccione un surtidor.';
+         return;
+    }
+
+    const surtidorSeleccionado = encontrarSurtidorPorNombre(surtidorSeleccionadoNombre);
+
+     if (!surtidorSeleccionado) {
+         if (resultadoEstimacionDiv) resultadoEstimacionDiv.textContent = `Error interno: No se encontró la instancia del surtidor "${surtidorSeleccionadoNombre}".`;
+         return;
+     }
+
+     if (isNaN(litrosPorAuto) || litrosPorAuto < 0) {
+         if (resultadoEstimacionDiv) resultadoEstimacionDiv.textContent = 'Por favor, ingrese una cantidad válida de litros por auto.';
+         return;
+     }
+     if (isNaN(cantidadAutos) || cantidadAutos < 0) {
+         if (resultadoEstimacionDiv) resultadoEstimacionDiv.textContent = 'Por favor, ingrese una cantidad válida de autos.';
+         return;
+     }
+
+
+    const resultadoEstimacion = surtidorSeleccionado.estimarAbastecimiento(litrosPorAuto, cantidadAutos);
+
+    if (resultadoEstimacionDiv) {
+      resultadoEstimacionDiv.textContent = resultadoEstimacion; 
+    }
+
+    estimacionForm.reset();
+  });
+
+
+ 
+  actualizarVistaSurtidores();
     if (mensajeCapacidad) {
-       
-        mensajeCapacidad.textContent = `Capacidad máxima: ${CAPACIDAD_MAXIMA} litros`;
-    } else {
-        console.error("Element with ID 'mensaje-capacidad' not found.");
-    }
-
-   
-    if (cantidadInput && mensajeCapacidad) {
-        cantidadInput.addEventListener('input', () => {
-            const cantidadValue = cantidadInput.value.trim();
-            let displayMessage = `Capacidad máxima: ${CAPACIDAD_MAXIMA} litros`; 
-
-            if (cantidadValue === '') {
-               
-            } else {
-                const cantidad = parseFloat(cantidadValue);
-                
-                if (!isNaN(cantidad)) {
-                    
-                    const validacion = validarCapacidadSurtidor(cantidad);
-                    
-                    displayMessage = validacion.message;
-                } else {
-                   
-                    displayMessage = 'Por favor, ingrese un número válido.';
-                }
-            }
-            mensajeCapacidad.textContent = displayMessage;
-        });
-    } else {
-        if (!cantidadInput) console.error("Element with ID 'cantidad' not found.");
-        
-    }
-
-   
-    if (form && tipoCombustibleSelect && cantidadInput && fechaInput && reporteDiv && mensajeCapacidad) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); 
-
-           
-            const tipo = tipoCombustibleSelect.value.trim();
-            const cantidadStr = cantidadInput.value;
-            const fecha = fechaInput.value;
-            const cantidad = parseFloat(cantidadStr);
-
-           
-            if (isNaN(cantidad) || cantidad <= 0) {
-                alert('Error: La cantidad debe ser un número positivo.');
-                return; 
-            }
-
-          
-            const validacionCapacidad = validarCapacidadSurtidor(cantidad);
-            if (!validacionCapacidad.valid) { 
-                
-                alert(validacionCapacidad.message);
-                return; 
-            }
-
-           
-            const resultado = reportarIngresoGasolina(tipo, cantidad, fecha);
-
-            
-            if (resultado && resultado.success) {
-                
-                const entrada = document.createElement('p');
-               
-                entrada.textContent = `✔ Ingreso reportado: ${tipo}, ${cantidad} litros, fecha: ${fecha}`;
-                reporteDiv.appendChild(entrada);
-
-               
-                form.reset();
-
-               
-                mensajeCapacidad.textContent = `Capacidad máxima: ${CAPACIDAD_MAXIMA} litros`;
-
-            } else {
-               
-                alert(resultado?.message || 'Error al reportar el ingreso de gasolina.');
-            }
-        });
-    } else {
-       
-        if (!form) console.error("Element with ID 'Ingreso-form' not found.");
-        if (!tipoCombustibleSelect) console.error("Element with ID 'tipo-combustible' not found.");
-        if (!cantidadInput) console.error("Element with ID 'cantidad' not found.");
-        if (!fechaInput) console.error("Element with ID 'fecha' not found.");
-        if (!reporteDiv) console.error("Element with ID 'reporte-gasolina' not found.");
-        if (!mensajeCapacidad) console.error("Element with ID 'mensaje-capacidad' not found."); 
+        mensajeCapacidad.textContent = 'Seleccione un surtidor para validar capacidad.';
     }
 
 
-    
-    if (surtidorForm && nombreSurtidorInput && tipoSurtidorSelect) {
-        surtidorForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const nombre = nombreSurtidorInput.value.trim();
-            const tipo = tipoSurtidorSelect.value.trim();
-
-            
-            if (!nombre || !tipo) {
-                alert('Por favor, ingrese nombre y tipo para el surtidor.');
-                return;
-            }
-
-            
-            const resultado = agregarSurtidor(nombre, tipo);
-
-           
-            if (resultado && resultado.success && resultado.data) {
-                surtidores.push(resultado.data); 
-                actualizarVistaSurtidores();     
-                surtidorForm.reset();             
-                
-                console.log(resultado.message || `Surtidor '${nombre}' agregado.`);
-            } else {
-                
-                alert(resultado?.message || 'Error al agregar el surtidor.');
-            }
-            
-        });
-    } else {
-        if (!surtidorForm) console.error("Element with ID 'surtidor-form' not found.");
-        if (!nombreSurtidorInput) console.error("Element with ID 'nombre-surtidor' not found.");
-        if (!tipoSurtidorSelect) console.error("Element with ID 'tipo-surtidor' not found.");
-    }
-
-
-    if (consultarStockBtn && tipoStockSelect && resultadoStockDiv) {
-        consultarStockBtn.addEventListener('click', () => {
-            const tipo = tipoStockSelect.value.trim();
-
-            if (!tipo) {
-                 resultadoStockDiv.textContent = 'Por favor, seleccione un tipo de combustible.';
-                 return;
-            }
-
-            
-            const cantidad = consultarStock(tipo);
-
-           
-            if (cantidad === null || typeof cantidad === 'undefined') {
-                resultadoStockDiv.textContent = `No se encontró stock para "${tipo}" o ocurrió un error.`;
-            } else {
-                resultadoStockDiv.textContent = `Stock actual de "${tipo}": ${cantidad} litros.`;
-            }
-        });
-    } else {
-        if (!consultarStockBtn) console.error("Element with ID 'consultar-stock-btn' not found.");
-        if (!tipoStockSelect) console.error("Element with ID 'tipo-stock' not found.");
-        if (!resultadoStockDiv) console.error("Element with ID 'resultado-stock' not found.");
-    }
-
-   
-    function actualizarVistaSurtidores() {
-        if (reporteSurtidores) {
-            
-            reporteSurtidores.innerHTML = '<h3>Lista de Surtidores:</h3>' + surtidores.map(s =>
-                `<p><strong>${s?.nombre || 'N/A'}</strong> - ${s?.tipoCombustible || 'N/A'}</p>`
-            ).join('');
-        } else {
-            console.error("Element with ID 'reporte-surtidores' not found for updating list.");
-        }
-
-        if (estimacionForm && tipoEstimacion && litrosAutoInput && cantidadAutosInput && resultadoEstimacionDiv) {
-          estimacionForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-        
-            const tipo = tipoEstimacion.value.trim();
-            const litrosPorAuto = parseFloat(litrosAutoInput.value);
-            const cantidadAutos = parseInt(cantidadAutosInput.value);
-        
-            if (!tipo || isNaN(litrosPorAuto) || isNaN(cantidadAutos)) {
-              resultadoEstimacionDiv.textContent = 'Por favor, ingrese valores válidos.';
-              return;
-            }
-        
-            const resultado = estimarAbastecimiento(tipo, litrosPorAuto, cantidadAutos);
-            
-            if (resultado.suficiente) {
-              resultadoEstimacionDiv.textContent = ` Stock suficiente. Se pueden abastecer ${cantidadAutos} autos.`;
-            } else {
-              resultadoEstimacionDiv.textContent = ` Stock insuficiente. Solo se pueden abastecer ${resultado.autosPosibles} autos.`;
-            }
-        
-            estimacionForm.reset();
-          });
-        } else {
-          console.error('Elementos del formulario de estimación no encontrados.');
-        }
-
-
-    }
-    
-
-
-
-    
-
-});
+}); 
