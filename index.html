@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Gestión de Gasolinera</title>
    <style>
-    /* Estilos básicos opcionales para mejorar la presentación */
     body { font-family: sans-serif; line-height: 1.6; margin: 20px; background-color: #f4f4f4;}
     h1, h2, h3 { color: #333; margin-bottom: 10px;}
     form { margin-bottom: 20px; padding: 20px; border: 1px solid #020202; border-radius: 5px; background-color: #fff;}
@@ -14,8 +13,8 @@
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      width: calc(100% - 22px);
-      box-sizing: border-box; 
+      width: calc(100% - 22px); 
+      box-sizing: border-box;
       font-size: 1em;
     }
     input[type="submit"], button {
@@ -26,32 +25,47 @@
          border: none;
          padding: 10px 20px;
          border-radius: 4px;
-         margin-right: 10px; 
+         margin-right: 10px;
          font-size: 1em;
     }
     input[type="submit"]:hover, button:hover {
-        background-color: #0056b3;
+        background-color: #0056b3; 
     }
-    #mensaje-capacidad {
+    #mensaje-capacidad, #ticket-cantidad-mensaje, #cancel-ticket-message {
       font-size: 0.9em;
       color: #d9534f; 
       margin-top: -5px;
       margin-bottom: 10px;
     }
-     #mensaje-capacidad.valid { 
-         color: #5cb85c;
+     #mensaje-capacidad.valid, #ticket-cantidad-mensaje.valid, #cancel-ticket-message.valid {
+         color: #5cb85c; 
      }
-    .report-output { 
+     #mensaje-capacidad.invalid, #ticket-cantidad-mensaje.invalid, #cancel-ticket-message.invalid {
+         color: #d9534f;
+     }
+
+    .report-output {
       margin-top: 15px;
       padding: 15px;
       border: 1px dashed #ddd;
       border-radius: 5px;
       background-color: #f9f9f9;
-      white-space: pre-wrap; 
+      white-space: pre-wrap;
       word-wrap: break-word; 
     }
+     #ticket-resultado.valid, #cancel-ticket-result.valid {
+         border-color: #5cb85c;
+         background-color: #e9ffe9;
+         color: #3c763d; 
+     }
+     #ticket-resultado.invalid, #cancel-ticket-result.invalid {
+          border-color: #d9534f;
+          background-color: #fef0f0;
+          color: #a94442; 
+     }
 
-  #ticket-history { 
+   
+     .history-container {
         margin-top: 20px;
         padding: 15px;
         border: 1px solid #ccc;
@@ -59,12 +73,12 @@
         background-color: #fff;
         max-height: 400px; 
         overflow-y: auto;
-    }
+     }
+
 
     .ticket-entry { 
-        border-bottom: 1px dotted #eee; 
-        padding-bottom: 10px;
-        margin-bottom: 10px;
+        padding-bottom: 0px; 
+        margin-bottom: 0px;
     }
      .ticket-history .ticket-entry { 
           border-bottom: 1px dotted #ccc;
@@ -72,6 +86,7 @@
           margin-bottom: 10px;
           background-color: #f9f9f9; 
           border-radius: 4px;
+          break-inside: avoid; 
      }
       .ticket-history .ticket-entry:last-child {
            border-bottom: none; 
@@ -92,14 +107,39 @@
      .ticket-entry strong {
          color: #555;
      }
+    
      .ticket-inline-info {
-          display: flex; 
+          display: flex;
           gap: 15px; 
-          flex-wrap: wrap; 
+          flex-wrap: wrap;
+          margin-bottom: 5px; 
      }
      .ticket-inline-info p {
          margin: 0; 
      }
+     .ticket-status {
+         font-weight: bold;
+     }
+     .status-Generado { color: #0d6efd;  }
+     .status-Completado { color: #198754;  }
+     .status-Cancelado { color: #dc3545;  }
+
+     .failed-attempt-entry {
+         border-bottom: 1px dotted #ffc107; 
+         padding: 8px;
+         margin-bottom: 8px;
+         background-color: #fff3cd; 
+         border-radius: 4px;
+         font-size: 0.9em;
+     }
+      .failed-attempt-entry:last-child {
+          border-bottom: none;
+          margin-bottom: 0;
+      }
+      .failed-attempt-entry strong {
+          color: #664d03; 
+      }
+
 
     #reporte-surtidores p { margin: 5px 0; border-bottom: 1px dotted #eee; padding-bottom: 5px;}
      #reporte-surtidores p:last-child { border-bottom: none; }
@@ -122,7 +162,7 @@
         <input type="submit" value="Agregar Surtidor" />
       </form>
        <h3>Surtidores Agregados</h3>
-       <div id="reporte-surtidores" class="report-output"></div> 
+       <div id="reporte-surtidores" class="report-output"></div>
   </section>
 
     <hr>
@@ -137,8 +177,8 @@
         </select>
 
         <label for="cantidad">Cantidad (litros):</label>
-        <input type="number" id="cantidad" required min="0.01" step="0.01" /> 
-        <div id="mensaje-capacidad"></div> 
+        <input type="number" id="cantidad" required min="0.01" step="0.01" />
+        <div id="mensaje-capacidad">Capacidad máxima global: 10000 litros</div> 
 
         <label for="fecha">Fecha:</label>
         <input type="date" id="fecha" required />
@@ -183,9 +223,9 @@
     <div id="resultado-estimacion" class="report-output"></div>
   </section>
 
+    <hr>
 
-
-    <section id="solicitar-ticket-section">
+  <section id="solicitar-ticket-section">
       <h2>Solicitar Ticket de Carga</h2>
       <form id="ticket-form">
            <label for="select-surtidor-ticket">Seleccionar Surtidor:</label>
@@ -206,15 +246,39 @@
           <input type="submit" value="Generar Ticket" />
       </form>
 
-      <h3>Último Resultado</h3>
+      <h3>Último Resultado de Generación</h3>
       <div id="ticket-resultado" class="report-output"></div>
-
-      <h3 style="margin-top: 30px;">Historial de Tickets Generados</h3>
-      <div id="ticket-history" class="ticket-history report-output">
-          <p>No se han generado tickets aún.</p>
-      </div>
-
   </section>
+
+  <hr>
+
+   <section id="cancelar-ticket-section">
+       <h2>Cancelar Ticket de Carga</h2>
+       <form id="cancel-ticket-form">
+           <label for="ticket-numero-cancelar">Número de Ticket a Cancelar:</label>
+           <input type="number" id="ticket-numero-cancelar" required min="1" step="1" placeholder="Ej: 1, 2, 3" />
+           <div id="cancel-ticket-message"></div> 
+
+           <input type="submit" value="Cancelar Ticket" />
+       </form>
+       <h3>Resultado de Cancelación</h3>
+       <div id="cancel-ticket-result" class="report-output"></div>
+
+        <h3 style="margin-top: 30px;">Intentos de Cancelación Fallidos</h3>
+        <div id="failed-cancellation-history" class="history-container">
+             <p>No hay intentos fallidos registrados.</p>
+        </div>
+   </section>
+
+  <hr>
+
+   <section id="ticket-history-section">
+       <h2>Historial de Tickets Generados</h2>
+       <div id="ticket-history" class="history-container ticket-history">
+           <p>No se han generado tickets aún.</p>
+       </div>
+   </section>
+
 
   <script type="module" src="./src/presenter.js"></script>
 </body>

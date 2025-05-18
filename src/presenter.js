@@ -1,8 +1,11 @@
 import { surtidor, CAPACIDAD_MAXIMA } from './surtidor.js';
-import { generarTicketCarga } from './usuario.js';
+import { generarTicketCarga, cancelarTicketCarga, TICKET_STATUS } from './usuario.js';
 
 
 const surtidores = [];
+const tickets = [];
+const failedCancellationAttempts = [];
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const formIngreso = document.getElementById('Ingreso-form');
@@ -37,6 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticketResultadoDiv = document.getElementById('ticket-resultado'); 
   const ticketHistoryDiv = document.getElementById('ticket-history'); 
 
+  const cancelTicketForm = document.getElementById('cancel-ticket-form');
+  const ticketNumeroCancelarInput = document.getElementById('ticket-numero-cancelar');
+  const cancelTicketMessageDiv = document.getElementById('cancel-ticket-message'); 
+  const cancelTicketResultDiv = document.getElementById('cancel-ticket-result'); 
+  const failedCancellationHistoryDiv = document.getElementById('failed-cancellation-history'); 
+
+
   function encontrarSurtidorPorNombre(nombre) {
     if (!nombre) return null;
      const nombreNormalizado = nombre.trim().toLowerCase();
@@ -65,10 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
        const selectsToUpdate = [selectSurtidorIngreso, selectSurtidorStock, selectSurtidorEstimacion, selectSurtidorTicket];
 
        selectsToUpdate.forEach(selectElement => {
-           
+ 
            if (!selectElement) return;
 
-           const selectedValue = selectElement.value; 
+           const selectedValue = selectElement.value;
 
            const defaultOption = selectElement.querySelector('option[value=""]');
            selectElement.innerHTML = ''; 
@@ -93,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
            if (selectedValue && selectElement.querySelector(`option[value="${selectedValue}"]`)) {
                 selectElement.value = selectedValue;
            } else {
-               
                selectElement.value = "";
            }
        });
@@ -135,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cantidad < 0.01) {
              mensajeCapacidad.textContent = 'La cantidad debe ser positiva.';
              mensajeCapacidad.className = '';
-             return;
+            return;
         }
 
 
@@ -147,6 +156,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cantidadInput?.addEventListener('input', updateCapacidadMessage);
     selectSurtidorIngreso?.addEventListener('change', updateCapacidadMessage);
+
+
+
+  function renderTicketHTML(ticket) {
+       const surtidorNombre = ticket.surtidorNombre || 'No especificado'; 
+
+      const statusClass = `status-${ticket.status.replace(/ /g, '')}`;
+
+
+       const ticketHTML = `
+           <div class="ticket-entry">
+               <h3>Ticket #${ticket.numeroTicket}</h3>
+                <div class="ticket-inline-info">
+                    <p><strong>Surtidor:</strong> ${surtidorNombre}</p>
+                    <p><strong>Tipo:</strong> ${ticket.tipoCombustible}</p>
+                </div>
+                <div class="ticket-inline-info">
+                    <p><strong>Cantidad:</strong> ${ticket.cantidadCargada} l</p>
+                    <p><strong>Fecha/Hora:</strong> ${ticket.fechaHora}</p>
+                </div>
+               <p><strong>Placa:</strong> ${ticket.placaVehiculo}</p>
+               <p><strong>Estado:</strong> <span class="ticket-status ${statusClass}">${ticket.status}</span></p>
+           </div>
+       `;
+       return ticketHTML;
+  }
+
+
+  function renderTicketHistory() {
+      if (!ticketHistoryDiv) return;
+
+      ticketHistoryDiv.innerHTML = '';
+
+      if (tickets.length === 0) {
+          ticketHistoryDiv.innerHTML = '<p>No se han generado tickets aún.</p>';
+      } else {
+           tickets.slice().reverse().forEach(ticket => { 
+               const ticketElement = document.createElement('div');
+               ticketElement.innerHTML = renderTicketHTML(ticket); 
+               ticketHistoryDiv.appendChild(ticketElement); 
+           });
+      }
+  }
+
+  function renderFailedCancellationHistory() {
+      if (!failedCancellationHistoryDiv) return;
+
+      failedCancellationHistoryDiv.innerHTML = ''; 
+
+      if (failedCancellationAttempts.length === 0) {
+          failedCancellationHistoryDiv.innerHTML = '<p>No hay intentos fallidos registrados.</p>';
+      } else {
+          failedCancellationAttempts.slice().reverse().forEach(attempt => {
+              const attemptElement = document.createElement('div');
+              attemptElement.classList.add('failed-attempt-entry'); 
+              attemptElement.innerHTML = `
+                  <p><strong>Ticket #:</strong> ${attempt.ticketNumber}</p>
+                  <p><strong>Fecha/Hora:</strong> ${attempt.timestamp}</p>
+                  <p><strong>Razón:</strong> ${attempt.reason}</p>
+              `;
+              failedCancellationHistoryDiv.appendChild(attemptElement);
+          });
+      }
+  }
 
 
   surtidorForm?.addEventListener('submit', (e) => {
@@ -314,6 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
       }
 
+     
       ticketCantidadMensajeDiv.textContent = ''; 
       ticketCantidadMensajeDiv.className = ''; 
   };
@@ -321,13 +395,21 @@ document.addEventListener('DOMContentLoaded', () => {
    ticketCantidadInput?.addEventListener('input', updateTicketCantidadMessage);
 
 
+  
   ticketForm?.addEventListener('submit', (e) => {
-      e.preventDefault(); 
+      e.preventDefault();
 
       const surtidorSeleccionadoNombre = selectSurtidorTicket?.value; 
       const cantidad = parseFloat(ticketCantidadInput?.value); 
       const fecha = ticketFechaInput?.value;
       const placa = ticketPlacaInput?.value.trim();
+
+      if (ticketResultadoDiv) {
+          ticketResultadoDiv.innerHTML = ''; 
+          ticketResultadoDiv.textContent = ''; 
+          ticketResultadoDiv.className = 'report-output'; 
+      }
+
 
       if (!surtidorSeleccionadoNombre) {
          if (ticketResultadoDiv) {
@@ -349,43 +431,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
        const tipo = surtidorSeleccionado.tipoCombustible;
 
-
-     
-      const resultado = generarTicketCarga(tipo, cantidad, fecha, placa);
+      const resultado = generarTicketCarga(surtidorSeleccionado.nombre, tipo, cantidad, fecha, placa);
 
       if (ticketResultadoDiv) { 
           if (resultado.success) {
-              const ticket = resultado.ticket;
+              const ticketGenerado = resultado.ticket;
 
-              const ticketHTML = `
-                  <div class="ticket-entry">
-                      <h3>Ticket #${ticket.numeroTicket}</h3>
-                       <div class="ticket-inline-info">
-                           <p><strong>Surtidor:</strong> ${surtidorSeleccionado.nombre}</p>
-                           <p><strong>Tipo:</strong> ${ticket.tipoCombustible}</p>
-                       </div>
-                       <div class="ticket-inline-info">
-                           <p><strong>Cantidad:</strong> ${ticket.cantidadCargada} l</p>
-                           <p><strong>Fecha/Hora:</strong> ${ticket.fechaHora}</p>
-                       </div>
-                      <p><strong>Placa:</strong> ${ticket.placaVehiculo}</p>
-                  </div>
-              `;
+              ticketResultadoDiv.innerHTML = renderTicketHTML(ticketGenerado);
+              ticketResultadoDiv.className = 'report-output valid'; 
 
-              ticketResultadoDiv.innerHTML = ticketHTML;
-               ticketResultadoDiv.className = 'report-output valid'; 
+              tickets.push(ticketGenerado); 
+              renderTicketHistory(); 
 
-              if (ticketHistoryDiv) {
-                  if (ticketHistoryDiv.textContent.includes('No se han generado tickets aún.')) {
-                      ticketHistoryDiv.innerHTML = '';
-                  }
-                  const historyEntryElement = document.createElement('div');
-                   historyEntryElement.classList.add('ticket-history'); 
-                  historyEntryElement.innerHTML = ticketHTML; 
-                  ticketHistoryDiv.prepend(historyEntryElement);
-              }
-
-              ticketForm.reset(); 
+              ticketForm.reset();
               if (ticketCantidadMensajeDiv) ticketCantidadMensajeDiv.textContent = ''; 
           } else {
               ticketResultadoDiv.textContent = `Error: ${resultado.message}`;
@@ -393,6 +451,89 @@ document.addEventListener('DOMContentLoaded', () => {
           }
       }
   });
+
+
+     const updateCancelTicketMessage = () => {
+         const numeroInput = ticketNumeroCancelarInput?.value.trim();
+         const numero = parseInt(numeroInput);
+
+         if (!cancelTicketMessageDiv) return;
+
+         if (numeroInput === '') {
+             cancelTicketMessageDiv.textContent = ''; 
+             cancelTicketMessageDiv.className = '';
+             return;
+         }
+
+         if (isNaN(numero) || numero <= 0) {
+              cancelTicketMessageDiv.textContent = 'Por favor, ingrese un número de ticket válido (positivo).';
+              cancelTicketMessageDiv.className = 'invalid';
+         } else {
+             cancelTicketMessageDiv.textContent = '';
+             cancelTicketMessageDiv.className = '';
+         }
+     };
+
+     ticketNumeroCancelarInput?.addEventListener('input', updateCancelTicketMessage);
+
+
+    cancelTicketForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const numeroTicketToCancel = ticketNumeroCancelarInput?.value.trim();
+
+         if (cancelTicketResultDiv) {
+             cancelTicketResultDiv.textContent = '';
+             cancelTicketResultDiv.innerHTML = '';
+             cancelTicketResultDiv.className = 'report-output'; 
+         }
+         if (cancelTicketMessageDiv) {
+             cancelTicketMessageDiv.textContent = '';
+             cancelTicketMessageDiv.className = '';
+         }
+
+
+         if (!numeroTicketToCancel) {
+             if (cancelTicketResultDiv) {
+                  cancelTicketResultDiv.textContent = 'Error: Por favor, ingrese el número del ticket a cancelar.';
+                  cancelTicketResultDiv.className = 'report-output invalid';
+             }
+             return;
+         }
+
+         const numeroParsed = parseInt(numeroTicketToCancel);
+        if (isNaN(numeroParsed) || numeroParsed <= 0) {
+             if (cancelTicketResultDiv) {
+                 cancelTicketResultDiv.textContent = 'Error: Número de ticket inválido. Debe ser un número positivo.';
+                 cancelTicketResultDiv.className = 'report-output invalid';
+             }
+             return;
+        }
+
+
+        const resultadoCancelacion = cancelarTicketCarga(numeroParsed, tickets);
+
+        if (cancelTicketResultDiv) {
+            if (resultadoCancelacion.success) {
+                cancelTicketResultDiv.textContent = resultadoCancelacion.message;
+                cancelTicketResultDiv.className = 'report-output valid'; 
+
+                renderTicketHistory(); 
+
+                cancelTicketForm.reset(); 
+                if (cancelTicketMessageDiv) cancelTicketMessageDiv.textContent = ''; 
+
+            } else {
+                cancelTicketResultDiv.textContent = resultadoCancelacion.message;
+                 cancelTicketResultDiv.className = 'report-output invalid'; 
+
+                 if (resultadoCancelacion.failedAttempt) {
+                     failedCancellationAttempts.push(resultadoCancelacion.failedAttempt);
+                     renderFailedCancellationHistory();
+                 }
+            }
+        }
+    });
 
 
   actualizarVistaSurtidores(); 
@@ -404,9 +545,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ticketCantidadMensajeDiv.textContent = ''; 
          ticketCantidadMensajeDiv.className = '';
     }
-    if (ticketHistoryDiv && ticketHistoryDiv.innerHTML.trim() === '') {
-         ticketHistoryDiv.innerHTML = '<p>No se han generado tickets aún.</p>';
+    if (cancelTicketMessageDiv) {
+         cancelTicketMessageDiv.textContent = '';
+         cancelTicketMessageDiv.className = '';
     }
+
+    
+    renderTicketHistory(); 
+    renderFailedCancellationHistory(); 
 
 
 }); 

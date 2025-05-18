@@ -1,98 +1,187 @@
-import { generarTicketCarga, resetTicketCounter } from '../usuario.js'; 
 
-describe('Generación de Ticket de Carga (Usuario)', () => {
+import { generarTicketCarga, cancelarTicketCarga, resetTicketCounter, TICKET_STATUS } from '../usuario.js';
+
+describe('Generación y Cancelación de Ticket de Carga (Usuario)', () => {
 
     beforeEach(() => {
         resetTicketCounter();
     });
 
     it('debe generar un ticket exitosamente con datos válidos', () => {
+        const surtidor = 'Surtidor 1'; 
         const tipo = 'Gasolina 95';
         const cantidad = 150.75;
         const fecha = '2023-11-01';
         const placa = 'XYZ-789';
 
-        const resultado = generarTicketCarga(tipo, cantidad, fecha, placa);
+        const resultado = generarTicketCarga(surtidor, tipo, cantidad, fecha, placa);
 
         expect(resultado.success).toBe(true);
         expect(resultado.ticket).toBeDefined();
 
         expect(resultado.ticket.numeroTicket).toBe(1); 
+        expect(resultado.ticket.surtidorNombre).toBe(surtidor); 
         expect(resultado.ticket.tipoCombustible).toBe(tipo);
         expect(resultado.ticket.cantidadCargada).toBe(cantidad);
         expect(resultado.ticket.fechaHora).toContain(fecha);
         expect(resultado.ticket.fechaHora).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
         expect(resultado.ticket.placaVehiculo).toBe(placa);
+        expect(resultado.ticket.status).toBe(TICKET_STATUS.GENERADO);
     });
 
     it('debe generar IDs únicos para tickets consecutivos', () => {
+        const surtidor = 'Surtidor A';
         const tipo = 'Diesel';
         const cantidad = 300;
         const fecha = '2023-11-02';
         const placa1 = 'ABC-111';
         const placa2 = 'DEF-222';
 
-        const resultado1 = generarTicketCarga(tipo, cantidad, fecha, placa1);
-        const resultado2 = generarTicketCarga(tipo, cantidad, fecha, placa2);
+        const resultado1 = generarTicketCarga(surtidor, tipo, cantidad, fecha, placa1);
+        const resultado2 = generarTicketCarga(surtidor, tipo, cantidad, fecha, placa2);
 
         expect(resultado1.success).toBe(true);
         expect(resultado2.success).toBe(true);
 
         expect(resultado1.ticket.numeroTicket).toBe(1);
         expect(resultado2.ticket.numeroTicket).toBe(2);
+         expect(resultado1.ticket.status).toBe(TICKET_STATUS.GENERADO);
+         expect(resultado2.ticket.status).toBe(TICKET_STATUS.GENERADO);
     });
 
-    it('debe retornar un mensaje de error si la cantidad es cero o negativa', () => {
+    it('debe retornar un mensaje de error si la cantidad es cero o negativa al generar', () => {
+        const surtidor = 'Surtidor 1';
         const tipo = 'Gasolina 95';
         const fecha = '2023-11-01';
         const placa = 'ABC-123';
 
-        let resultado = generarTicketCarga(tipo, 0, fecha, placa);
-        expect(resultado.success).toBe(false);
-        expect(resultado.message).toBe("Cantidad inválida: debe ingresar un valor positivo");
-        expect(resultado.ticket).toBeUndefined(); 
-
-        resultado = generarTicketCarga(tipo, -50, fecha, placa);
+        let resultado = generarTicketCarga(surtidor, tipo, 0, fecha, placa);
         expect(resultado.success).toBe(false);
         expect(resultado.message).toBe("Cantidad inválida: debe ingresar un valor positivo");
         expect(resultado.ticket).toBeUndefined();
 
-        resultado = generarTicketCarga(tipo, 'cien', fecha, placa);
+        resultado = generarTicketCarga(surtidor, tipo, -50, fecha, placa);
+        expect(resultado.success).toBe(false);
+        expect(resultado.message).toBe("Cantidad inválida: debe ingresar un valor positivo");
+        expect(resultado.ticket).toBeUndefined();
+
+        resultado = generarTicketCarga(surtidor, tipo, 'cien', fecha, placa);
         expect(resultado.success).toBe(false);
         expect(resultado.message).toBe("Cantidad inválida: debe ingresar un valor positivo");
         expect(resultado.ticket).toBeUndefined();
     });
 
-     it('debe retornar un mensaje de error si falta el tipo de combustible', () => {
+     it('debe retornar un mensaje de error si falta el surtidor, tipo, fecha o placa al generar', () => {
+         const surtidor = 'Surtidor 1';
+         const tipo = 'Gasolina 95';
          const cantidad = 100;
          const fecha = '2023-11-01';
          const placa = 'ABC-123';
 
-         let resultado = generarTicketCarga('', cantidad, fecha, placa);
+       
+         let resultado = generarTicketCarga('', tipo, cantidad, fecha, placa);
          expect(resultado.success).toBe(false);
-         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (tipo, cantidad, fecha, placa).");
-         expect(resultado.ticket).toBeUndefined();
+         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (surtidor, tipo, cantidad, fecha, placa).");
+
+      
+         resultado = generarTicketCarga(surtidor, '', cantidad, fecha, placa);
+         expect(resultado.success).toBe(false);
+         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (surtidor, tipo, cantidad, fecha, placa).");
+
+      
+          resultado = generarTicketCarga(surtidor, tipo, cantidad, '', placa);
+         expect(resultado.success).toBe(false);
+         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (surtidor, tipo, cantidad, fecha, placa).");
+
+          resultado = generarTicketCarga(surtidor, tipo, cantidad, fecha, '');
+         expect(resultado.success).toBe(false);
+         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (surtidor, tipo, cantidad, fecha, placa).");
      });
 
-      it('debe retornar un mensaje de error si falta la fecha', () => {
-         const tipo = 'Gasolina 95';
-         const cantidad = 100;
-         const placa = 'ABC-123';
 
-         let resultado = generarTicketCarga(tipo, cantidad, '', placa);
-         expect(resultado.success).toBe(false);
-         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (tipo, cantidad, fecha, placa).");
-         expect(resultado.ticket).toBeUndefined();
-     });
+    it('debe cancelar un ticket con estado "Generado" exitosamente', () => {
+        const ticket1 = generarTicketCarga('Surtidor 1', 'Gasolina 95', 50, '2023-11-05', 'ABC-123').ticket;
+        const ticket2 = generarTicketCarga('Surtidor 2', 'Diesel', 100, '2023-11-05', 'DEF-456').ticket;
+        const allTickets = [ticket1, ticket2]; 
 
-      it('debe retornar un mensaje de error si falta la placa', () => {
-         const tipo = 'Gasolina 95';
-         const cantidad = 100;
-         const fecha = '2023-11-01';
+        expect(ticket1.status).toBe(TICKET_STATUS.GENERADO); 
 
-         let resultado = generarTicketCarga(tipo, cantidad, fecha, '');
-         expect(resultado.success).toBe(false);
-         expect(resultado.message).toBe("Por favor, complete todos los campos requeridos (tipo, cantidad, fecha, placa).");
-         expect(resultado.ticket).toBeUndefined();
-     });
+        const resultadoCancelacion = cancelarTicketCarga(ticket1.numeroTicket, allTickets);
+
+        expect(resultadoCancelacion.success).toBe(true);
+        expect(resultadoCancelacion.message).toBe(`Ticket #${ticket1.numeroTicket} cancelado exitosamente.`);
+        expect(resultadoCancelacion.failedAttempt).toBeUndefined(); 
+
+        expect(ticket1.status).toBe(TICKET_STATUS.CANCELADO);
+        expect(ticket2.status).toBe(TICKET_STATUS.GENERADO);
+    });
+
+     it('debe cancelar un ticket con estado "Cancelado" nuevamente (ser idempotente)', () => {
+        const ticket1 = generarTicketCarga('Surtidor 1', 'Gasolina 95', 50, '2023-11-05', 'ABC-123').ticket;
+        const allTickets = [ticket1];
+        cancelarTicketCarga(ticket1.numeroTicket, allTickets); 
+        expect(ticket1.status).toBe(TICKET_STATUS.CANCELADO); 
+        const resultadoCancelacion = cancelarTicketCarga(ticket1.numeroTicket, allTickets);
+
+        expect(resultadoCancelacion.success).toBe(true);
+        expect(resultadoCancelacion.message).toBe(`Ticket #${ticket1.numeroTicket} cancelado exitosamente.`); 
+        expect(resultadoCancelacion.failedAttempt).toBeUndefined();
+
+        expect(ticket1.status).toBe(TICKET_STATUS.CANCELADO);
+    });
+
+
+    it('debe retornar un mensaje de error y retornar intento fallido si el ticket es "Completado"', () => {
+        const ticket1 = generarTicketCarga('Surtidor 1', 'Gasolina 95', 50, '2023-11-05', 'ABC-123').ticket;
+        ticket1.status = TICKET_STATUS.COMPLETADO;
+        const allTickets = [ticket1];
+
+        
+        const resultadoCancelacion = cancelarTicketCarga(ticket1.numeroTicket, allTickets);
+
+        expect(resultadoCancelacion.success).toBe(false);
+        expect(resultadoCancelacion.message).toBe("Error: No es posible cancelar este ticket - verifique el estado o número de folio");
+        expect(resultadoCancelacion.failedAttempt).toBeDefined();
+        expect(resultadoCancelacion.failedAttempt.ticketNumber).toBe(ticket1.numeroTicket);
+        expect(resultadoCancelacion.failedAttempt.reason).toBe(`Ticket en estado "${TICKET_STATUS.COMPLETADO}".`);
+        expect(resultadoCancelacion.failedAttempt.timestamp).toBeDefined(); 
+
+        expect(ticket1.status).toBe(TICKET_STATUS.COMPLETADO);
+    });
+
+    it('debe retornar un mensaje de error y retornar intento fallido si el ticket no existe', () => {
+        const allTickets = [
+             generarTicketCarga('Surtidor 1', 'Gasolina 95', 50, '2023-11-05', 'ABC-123').ticket
+        ]; 
+
+        const nonExistentTicketNumber = 999; 
+
+        const resultadoCancelacion = cancelarTicketCarga(nonExistentTicketNumber, allTickets);
+
+        expect(resultadoCancelacion.success).toBe(false);
+        expect(resultadoCancelacion.message).toBe("Error: No es posible cancelar este ticket - verifique el estado o número de folio");
+         expect(resultadoCancelacion.failedAttempt).toBeDefined(); 
+        expect(resultadoCancelacion.failedAttempt.ticketNumber).toBe(nonExistentTicketNumber);
+        expect(resultadoCancelacion.failedAttempt.reason).toBe("Ticket inexistente.");
+         expect(resultadoCancelacion.failedAttempt.timestamp).toBeDefined(); 
+
+        expect(allTickets[0].status).toBe(TICKET_STATUS.GENERADO);
+    });
+
+      it('debe retornar un mensaje de error y retornar intento fallido si el número de ticket no es válido (NaN)', () => {
+        const allTickets = [
+             generarTicketCarga('Surtidor 1', 'Gasolina 95', 50, '2023-11-05', 'ABC-123').ticket
+        ];
+
+        const resultadoCancelacion = cancelarTicketCarga('abc', allTickets);
+
+        expect(resultadoCancelacion.success).toBe(false);
+        expect(resultadoCancelacion.message).toBe("Error: No es posible cancelar este ticket - verifique el estado o número de folio");
+        expect(resultadoCancelacion.failedAttempt).toBeDefined();
+        expect(resultadoCancelacion.failedAttempt.ticketNumber).toBe('abc'); 
+        expect(resultadoCancelacion.failedAttempt.reason).toBe("Ticket inexistente.");
+        expect(resultadoCancelacion.failedAttempt.timestamp).toBeDefined();
+
+        expect(allTickets[0].status).toBe(TICKET_STATUS.GENERADO);
+    });
 });

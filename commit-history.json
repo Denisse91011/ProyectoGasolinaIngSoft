@@ -406,5 +406,22 @@
     },
     "coverage": 0,
     "test_count": 24
+  },
+  {
+    "sha": "8abb50d2cae5ed8b61c323abcd3f12bd8e230c43",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-18T18:33:22.000Z",
+      "message": "funcion de cancelacion de ticket implementada con pruebas pasando",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/8abb50d2cae5ed8b61c323abcd3f12bd8e230c43"
+    },
+    "stats": {
+      "total": 544,
+      "additions": 441,
+      "deletions": 103,
+      "date": "2025-05-18"
+    },
+    "coverage": 0,
+    "test_count": 27
   }
 ]
