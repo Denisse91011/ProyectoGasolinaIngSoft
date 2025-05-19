@@ -457,5 +457,22 @@
     },
     "coverage": 0,
     "test_count": 28
+  },
+  {
+    "sha": "b1c8bafb6b8c5d785492dfd7b19662941e124f9c",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-19T04:10:42.000Z",
+      "message": "Pruebas y funcion de Recibir notificación de turno/ticket pasando",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/b1c8bafb6b8c5d785492dfd7b19662941e124f9c"
+    },
+    "stats": {
+      "total": 114,
+      "additions": 113,
+      "deletions": 1,
+      "date": "2025-05-19"
+    },
+    "coverage": 0,
+    "test_count": 32
   }
 ]

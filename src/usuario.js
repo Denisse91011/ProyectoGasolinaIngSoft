@@ -85,4 +85,20 @@ export function verificarTurnoTicket(numeroTicket, surtidorNombre, colaTurno) {
         return { notificar: false, message: '' };
     }
 
+    const enEspera = colaTurno.filter(t => 
+      t.estado === TICKET_STATUS.GENERADO && t.surtidor === surtidorNombre
+    );
+
+    const index = enEspera.findIndex(t => t.numeroTicket === numeroTicket);
+
+    if (index === 3) {
+        ticket.notificado = true;
+
+        const mensaje = `¡Tu turno se acerca! Ticket #${ticket.numeroTicket}`;
+
+        return { notificar: true, message: mensaje };
+    }
+
+    return { notificar: false, message: '' };
 }
+
