@@ -1,5 +1,5 @@
 
-import { generarTicketCarga, cancelarTicketCarga, resetTicketCounter, TICKET_STATUS } from '../usuario.js';
+import { generarTicketCarga, cancelarTicketCarga, resetTicketCounter, verificarTurnoTicket, TICKET_STATUS } from '../usuario.js';
 
 describe('Generación y Cancelación de Ticket de Carga (Usuario)', () => {
 
@@ -185,3 +185,35 @@ describe('Generación y Cancelación de Ticket de Carga (Usuario)', () => {
         expect(allTickets[0].status).toBe(TICKET_STATUS.GENERADO);
     });
 });
+
+describe('Notificación de ticket cuando se acerca el turno', () => {
+
+    it('no debe notificar si el ticket está cancelado', () => {
+        const ticket = {
+            numeroTicket: 105,
+            surtidor: 'Surtidor 1',
+            tipoCombustible: 'Gasolina Especial',
+            cantidad: 40,
+            placa: 'ZXC-123',
+            estado: 'Cancelado',
+            notificado: false
+        };
+
+        const colaTurno = [
+           { numeroTicket: 101, estado: 'Generado', surtidor: 'Surtidor 1' },
+    { numeroTicket: 102, estado: 'Generado', surtidor: 'Surtidor 1' },
+    { numeroTicket: 103, estado: 'Generado', surtidor: 'Surtidor 1' },
+    ticket,
+    { numeroTicket: 106, estado: 'Generado', surtidor: 'Surtidor 1' }
+        ];
+
+        const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
+
+        expect(resultado.notificar).toBe(false);
+        expect(resultado.message).toBe('');
+    });
+
+    
+
+});
+

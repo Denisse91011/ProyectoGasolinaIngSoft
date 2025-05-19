@@ -72,3 +72,17 @@ export function cancelarTicketCarga(numeroTicketToCancel, allTickets) {
 export function resetTicketCounter() {
     nextTicketId = 1;
 }
+
+export function verificarTurnoTicket(numeroTicket, surtidorNombre, colaTurno) {
+    const ticket = colaTurno.find(t => t.numeroTicket === numeroTicket && t.surtidor === surtidorNombre);
+
+    if (!ticket) {
+        
+        return { notificar: false, message: '' };
+    }
+
+    if (ticket.estado !== TICKET_STATUS.GENERADO || ticket.notificado) {
+        return { notificar: false, message: '' };
+    }
+
+}
