@@ -491,5 +491,22 @@
     },
     "coverage": 0,
     "test_count": 32
+  },
+  {
+    "sha": "8384135d5169a6430e459942411a33f51e220b94",
+    "author": "nathan95oks",
+    "commit": {
+      "date": "2025-05-27T03:11:54.000Z",
+      "message": "conversion Usuario a clase",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/8384135d5169a6430e459942411a33f51e220b94"
+    },
+    "stats": {
+      "total": 29415,
+      "additions": 5356,
+      "deletions": 24059,
+      "date": "2025-05-27"
+    },
+    "coverage": 0,
+    "test_count": 36
   }
 ]

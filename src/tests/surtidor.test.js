@@ -1,4 +1,3 @@
-// src/surtidor.test.js
 import { surtidor, CAPACIDAD_MAXIMA } from '../surtidor.js'; 
 describe('surtidor', () => {
   let miSurtidor;
