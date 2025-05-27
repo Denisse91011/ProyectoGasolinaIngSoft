@@ -1,6 +1,3 @@
- <reference types="cypress" />
-
-
 describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
 
     beforeEach(() => {
@@ -8,9 +5,13 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
 
         cy.get('#nombre-surtidor').type('Surtidor Pruebas UI');
         cy.get('#tipo-surtidor').type('Gasolina Pruebas');
-        cy.get('#surtidor-form').submit();
+        cy.get('#surtidor-form').submit(); 
+        
+        cy.on('window:alert', (str) => {
+            expect(str).to.equal('Surtidor "Surtidor Pruebas UI" de tipo "Gasolina Pruebas" agregado correctamente.');
+        });
+        
         cy.get('#reporte-surtidores').should('contain.text', 'Surtidor Pruebas UI');
-
     });
 
 
@@ -26,7 +27,7 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
         cy.get('#ticket-fecha').type(fecha);
         cy.get('#ticket-placa').type(placa);
 
-        cy.get('#ticket-form').submit();
+        cy.get('#ticket-form').submit(); 
 
         cy.get('#ticket-resultado')
             .should('be.visible') 
@@ -60,7 +61,7 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
          cy.get('#ticket-cantidad').type('0');
          cy.get('#ticket-fecha').type(fecha);
          cy.get('#ticket-placa').type(placa);
-         cy.get('#ticket-form').submit();
+         cy.get('#ticket-form').submit(); 
 
          cy.get('#ticket-resultado')
              .should('be.visible')
@@ -70,7 +71,10 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
          cy.visit('index.html'); 
          cy.get('#nombre-surtidor').type('Surtidor Pruebas UI');
          cy.get('#tipo-surtidor').type('Gasolina Pruebas');
-         cy.get('#surtidor-form').submit();
+         cy.get('#surtidor-form').submit(); 
+         cy.on('window:alert', (str) => { 
+             expect(str).to.equal('Surtidor "Surtidor Pruebas UI" de tipo "Gasolina Pruebas" agregado correctamente.');
+         });
          cy.get('#reporte-surtidores').should('contain.text', 'Surtidor Pruebas UI'); 
 
          cy.get('#select-surtidor-ticket').select(surtidorNombre);
@@ -88,6 +92,9 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
           cy.get('#nombre-surtidor').type('Surtidor Pruebas UI');
           cy.get('#tipo-surtidor').type('Gasolina Pruebas');
           cy.get('#surtidor-form').submit();
+          cy.on('window:alert', (str) => {
+             expect(str).to.equal('Surtidor "Surtidor Pruebas UI" de tipo "Gasolina Pruebas" agregado correctamente.');
+          });
           cy.get('#reporte-surtidores').should('contain.text', 'Surtidor Pruebas UI'); 
 
           cy.get('#select-surtidor-ticket').select(surtidorNombre);
@@ -127,80 +134,68 @@ describe('Gestión de Tickets de Carga via UI (Usuario)', () => {
         cy.get('#ticket-history .ticket-entry').should('not.exist');
     });
 
-
-
-    it('debe cancelar un ticket con estado "Generado" exitosamente a través del formulario', () => {
-        const cantidad = '80';
-        const fecha = '2023-12-20';
-        const placa = 'FGH-333';
+    it('debe notificar si el ticket está a 3 turnos de ser atendido a través de la UI', () => {
         const surtidorNombre = 'Surtidor Pruebas UI';
+        const baseDate = '2024-01-01'; 
 
         cy.get('#select-surtidor-ticket').select(surtidorNombre);
-        cy.get('#ticket-cantidad').type(cantidad);
-        cy.get('#ticket-fecha').type(fecha);
-        cy.get('#ticket-placa').type(placa);
-        cy.get('#ticket-form').submit();
+        cy.get('#ticket-cantidad').type('10');
+        cy.get('#ticket-fecha').type(baseDate);
+        cy.get('#ticket-placa').type('ABC-001');
+        cy.get('#ticket-form input[type="submit"]').click(); 
+        cy.get('#ticket-resultado').should('contain.text', 'Ticket #1'); 
 
-        cy.get('#ticket-resultado')
-             .should('be.visible')
-             .and('have.class', 'valid')
-             .and('contain.text', 'Ticket #1');
+        cy.get('#select-surtidor-ticket').select(surtidorNombre);
+        cy.get('#ticket-cantidad').type('20');
+        cy.get('#ticket-fecha').type(baseDate);
+        cy.get('#ticket-placa').type('ABC-002');
+        cy.get('#ticket-form input[type="submit"]').click(); 
+        cy.get('#ticket-resultado').should('contain.text', 'Ticket #2');
 
-         cy.get('#ticket-history .ticket-entry')
-             .should('have.length', 1)
-             .and('contain.text', 'Ticket #1')
-              .find('.ticket-status')
-              .should('have.class', 'status-Generado')
-              .and('contain.text', 'Generado');
+        cy.get('#select-surtidor-ticket').select(surtidorNombre);
+        cy.get('#ticket-cantidad').type('30');
+        cy.get('#ticket-fecha').type(baseDate);
+        cy.get('#ticket-placa').type('ABC-003');
+        cy.get('#ticket-form input[type="submit"]').click(); 
+        cy.get('#ticket-resultado').should('contain.text', 'Ticket #3');
 
+        const targetTicketNumber = 4; 
+        cy.get('#select-surtidor-ticket').select(surtidorNombre);
+        cy.get('#ticket-cantidad').type('40');
+        cy.get('#ticket-fecha').type(baseDate);
+        cy.get('#ticket-placa').type('XYZ-TARGET');
+        cy.get('#ticket-form input[type="submit"]').click(); 
+        cy.get('#ticket-resultado').should('contain.text', `Ticket #${targetTicketNumber}`); 
 
-        const numeroTicketACancelar = '1'; 
+        cy.get('#select-surtidor-ticket').select(surtidorNombre);
+        cy.get('#ticket-cantidad').type('50');
+        cy.get('#ticket-fecha').type(baseDate);
+        cy.get('#ticket-placa').type('ABC-005');
+        cy.get('#ticket-form input[type="submit"]').click(); 
+        cy.get('#ticket-resultado').should('contain.text', 'Ticket #5');
 
-        cy.get('#ticket-numero-cancelar').type(numeroTicketACancelar);
+        cy.get('#verificar-numero-ticket').type(targetTicketNumber);
+        cy.get('#select-surtidor-turno').select(surtidorNombre);
+        cy.get('#verificar-turno-form button[type="submit"]').click(); 
 
-        cy.get('#cancel-ticket-form').submit();
-
-
-        cy.get('#cancel-ticket-result')
+        cy.get('#verificar-turno-message')
             .should('be.visible')
-            .and('have.class', 'valid') 
-            .and('contain.text', `Ticket #${numeroTicketACancelar} cancelado exitosamente.`); 
+            .and('have.class', 'valid')
+            .and('contain.text', `¡Tu turno se acerca! Ticket #${targetTicketNumber}`);
 
-         cy.get('#ticket-history .ticket-entry')
-             .should('have.length', 1) 
-             .and('contain.text', 'Ticket #1')
-             .find('.ticket-status')
-             .should('have.class', 'status-Cancelado') 
-             .and('contain.text', 'Cancelado'); 
-
-        cy.get('#failed-cancellation-history').should('contain.text', 'No hay intentos fallidos registrados.');
-     });
-
-     it('debe mostrar error y registrar intento fallido al cancelar un ticket inexistente a través del formulario', () => {
-
-         const numeroInexistente = '999'; 
-
-         cy.get('#ticket-numero-cancelar').type(numeroInexistente);
-
-         cy.get('#cancel-ticket-form').submit();
-
-         cy.get('#cancel-ticket-result')
-             .should('be.visible')
-             .and('have.class', 'invalid') 
-             .and('contain.text', 'Error: No es posible cancelar este ticket - verifique el estado o número de folio'); 
+        cy.get('#verificar-turno-result')
+            .should('be.visible')
+            .and('have.class', 'valid')
+            .and('contain.text', `Ticket #${targetTicketNumber}`)
+            .and('contain.text', 'Posición en cola: 4 de 5') 
+            .and('contain.text', 'Estado: Generado'); 
 
 
-         cy.get('#failed-cancellation-history .failed-attempt-entry')
-             .should('be.visible') 
-             .and('have.length', 1) 
-             .and('contain.text', `Ticket #: ${numeroInexistente}`)
-             .and('contain.text', 'Razón: Ticket inexistente.');
+        cy.get('body').find('.floating-notification')
+            .should('be.visible')
+            .and('contain.text', `¡Tu turno se acerca! Ticket #${targetTicketNumber}`);
 
-         cy.get('#ticket-history').should('contain.text', 'No se han generado tickets aún.');
-
-     });
-
-   
-
+        cy.get('.floating-notification', { timeout: 6000 }).should('not.exist'); 
+    });
 
 });

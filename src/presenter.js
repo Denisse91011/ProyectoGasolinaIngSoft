@@ -1,11 +1,10 @@
 import { surtidor, CAPACIDAD_MAXIMA } from './surtidor.js';
-import { generarTicketCarga, cancelarTicketCarga, TICKET_STATUS } from './usuario.js';
+import { generarTicketCarga, cancelarTicketCarga, verificarTurnoTicket, TICKET_STATUS } from './usuario.js';
 
 
 const surtidores = [];
 const tickets = [];
 const failedCancellationAttempts = [];
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const formIngreso = document.getElementById('Ingreso-form');
@@ -46,6 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelTicketResultDiv = document.getElementById('cancel-ticket-result'); 
   const failedCancellationHistoryDiv = document.getElementById('failed-cancellation-history'); 
 
+  const formVerificarTurno = document.getElementById('verificar-turno-form');
+  const numeroTicketInput = document.getElementById('verificar-numero-ticket');
+  const selectSurtidorTurno = document.getElementById('select-surtidor-turno');
+  const messageDiv = document.getElementById('verificar-turno-message');
+  const resultDiv = document.getElementById('verificar-turno-result');
+  const historyDiv = document.getElementById('failed-verification-history');
 
   function encontrarSurtidorPorNombre(nombre) {
     if (!nombre) return null;
@@ -72,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function populateSurtidorSelects() {
-       const selectsToUpdate = [selectSurtidorIngreso, selectSurtidorStock, selectSurtidorEstimacion, selectSurtidorTicket];
+       const selectsToUpdate = [selectSurtidorIngreso, selectSurtidorStock, selectSurtidorEstimacion, selectSurtidorTicket, selectSurtidorTurno];
 
        selectsToUpdate.forEach(selectElement => {
  
@@ -453,106 +458,142 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-     const updateCancelTicketMessage = () => {
-         const numeroInput = ticketNumeroCancelarInput?.value.trim();
-         const numero = parseInt(numeroInput);
+  
+formVerificarTurno?.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-         if (!cancelTicketMessageDiv) return;
+    const numeroTicketRaw = numeroTicketInput?.value?.trim();
+    const surtidorSeleccionadoNombre = selectSurtidorTurno?.value;
+    const numeroTicketParsed = parseInt(numeroTicketRaw); 
 
-         if (numeroInput === '') {
-             cancelTicketMessageDiv.textContent = ''; 
-             cancelTicketMessageDiv.className = '';
-             return;
-         }
+    if (messageDiv) {
+      messageDiv.textContent = '';
+      messageDiv.className = '';
+    }
+    if (resultDiv) {
+      resultDiv.textContent = '';
+      resultDiv.className = '';
+    }
 
-         if (isNaN(numero) || numero <= 0) {
-              cancelTicketMessageDiv.textContent = 'Por favor, ingrese un número de ticket válido (positivo).';
-              cancelTicketMessageDiv.className = 'invalid';
-         } else {
-             cancelTicketMessageDiv.textContent = '';
-             cancelTicketMessageDiv.className = '';
-         }
-     };
+    if (historyDiv && historyDiv.querySelector('.empty-history')) {
+        historyDiv.innerHTML = '';
+    }
 
-     ticketNumeroCancelarInput?.addEventListener('input', updateCancelTicketMessage);
+    if (!numeroTicketRaw || isNaN(numeroTicketParsed) || numeroTicketParsed <= 0) {
+      if (messageDiv) {
+        messageDiv.textContent = 'Por favor ingrese un número de ticket válido (positivo).';
+        messageDiv.className = 'invalid';
+      }
+      return;
+    }
 
+    if (!surtidorSeleccionadoNombre) {
+      if (messageDiv) {
+        messageDiv.textContent = 'Por favor seleccione un surtidor.';
+        messageDiv.className = 'invalid';
+      }
+      return;
+    }
 
-    cancelTicketForm?.addEventListener('submit', (e) => {
-        e.preventDefault();
+    const surtidorSeleccionado = encontrarSurtidorPorNombre(surtidorSeleccionadoNombre);
 
-        const numeroTicketToCancel = ticketNumeroCancelarInput?.value.trim();
+    if (!surtidorSeleccionado) {
+      if (messageDiv) {
+        messageDiv.textContent = `Error: No se encontró el surtidor "${surtidorSeleccionadoNombre}".`;
+        messageDiv.className = 'invalid';
+      }
+      return;
+    }
 
-         if (cancelTicketResultDiv) {
-             cancelTicketResultDiv.textContent = '';
-             cancelTicketResultDiv.innerHTML = '';
-             cancelTicketResultDiv.className = 'report-output'; 
-         }
-         if (cancelTicketMessageDiv) {
-             cancelTicketMessageDiv.textContent = '';
-             cancelTicketMessageDiv.className = '';
-         }
-
-
-         if (!numeroTicketToCancel) {
-             if (cancelTicketResultDiv) {
-                  cancelTicketResultDiv.textContent = 'Error: Por favor, ingrese el número del ticket a cancelar.';
-                  cancelTicketResultDiv.className = 'report-output invalid';
-             }
-             return;
-         }
-
-         const numeroParsed = parseInt(numeroTicketToCancel);
-        if (isNaN(numeroParsed) || numeroParsed <= 0) {
-             if (cancelTicketResultDiv) {
-                 cancelTicketResultDiv.textContent = 'Error: Número de ticket inválido. Debe ser un número positivo.';
-                 cancelTicketResultDiv.className = 'report-output invalid';
-             }
-             return;
+    
+    const resultadoVerificacion = verificarTurnoTicket(numeroTicketParsed, surtidorSeleccionadoNombre, tickets); 
+    if (resultadoVerificacion.currentPosition === -1) {
+        if (messageDiv) {
+            messageDiv.textContent = `No se encontró el ticket #${numeroTicketParsed} para el surtidor "${surtidorSeleccionadoNombre}".`;
+            messageDiv.className = 'invalid';
         }
-
-
-        const resultadoCancelacion = cancelarTicketCarga(numeroParsed, tickets);
-
-        if (cancelTicketResultDiv) {
-            if (resultadoCancelacion.success) {
-                cancelTicketResultDiv.textContent = resultadoCancelacion.message;
-                cancelTicketResultDiv.className = 'report-output valid'; 
-
-                renderTicketHistory(); 
-
-                cancelTicketForm.reset(); 
-                if (cancelTicketMessageDiv) cancelTicketMessageDiv.textContent = ''; 
-
-            } else {
-                cancelTicketResultDiv.textContent = resultadoCancelacion.message;
-                 cancelTicketResultDiv.className = 'report-output invalid'; 
-
-                 if (resultadoCancelacion.failedAttempt) {
-                     failedCancellationAttempts.push(resultadoCancelacion.failedAttempt);
-                     renderFailedCancellationHistory();
-                 }
-            }
+        const errorEntry = document.createElement('div');
+        errorEntry.className = 'history-entry failed'; 
+        errorEntry.innerHTML = `
+            <p><strong>Ticket #:</strong> ${numeroTicketParsed}</p>
+            <p><strong>Surtidor:</strong> ${surtidorSeleccionadoNombre}</p>
+            <p><strong>Fecha/Hora:</strong> ${new Date().toLocaleString()}</p>
+            <p><strong>Razón:</strong> Ticket o Surtidor no encontrado.</p>
+        `;
+        if (historyDiv) {
+            historyDiv.prepend(errorEntry); 
         }
-    });
+        return;
+    }
+
+    if (messageDiv) {
+        if (resultadoVerificacion.notificar) {
+            messageDiv.textContent = resultadoVerificacion.message;
+            messageDiv.className = 'valid';
+        } else if (resultadoVerificacion.ticketStatus === TICKET_STATUS.CANCELADO || resultadoVerificacion.ticketStatus === TICKET_STATUS.COMPLETADO) {
+            messageDiv.textContent = `El ticket #${numeroTicketParsed} tiene estado "${resultadoVerificacion.ticketStatus}". No es elegible para notificación de turno.`;
+            messageDiv.className = 'info'; 
+        } else if (resultadoVerificacion.totalWaiting === 0) {
+            messageDiv.textContent = `El surtidor "${surtidorSeleccionadoNombre}" no tiene tickets en cola en estado "Generado".`;
+            messageDiv.className = 'info';
+        } else if (resultadoVerificacion.currentPosition > 0) {
+            messageDiv.textContent = `Verificación completada. Ticket #${numeroTicketParsed} en posición ${resultadoVerificacion.currentPosition} de ${resultadoVerificacion.totalWaiting} en la cola.`;
+            messageDiv.className = 'valid';
+        } else {
+            messageDiv.textContent = 'Verificación de turno completada.'; 
+            messageDiv.className = 'valid';
+        }
+    }
+
+    if (resultDiv) {
+        
+        const statusText = resultadoVerificacion.ticketStatus;
+        const statusClass = `status-${statusText.replace(/ /g, '')}`;
+
+        resultDiv.innerHTML = `
+            <div class="result-content">
+                <h4>Ticket #${numeroTicketParsed}</h4>
+                <p><strong>Surtidor:</strong> ${surtidorSeleccionadoNombre}</p>
+                <p><strong>Posición en cola:</strong> <span class="position">${resultadoVerificacion.currentPosition !== -1 ? resultadoVerificacion.currentPosition : 'N/A'}</span> de ${resultadoVerificacion.totalWaiting}</p>
+                <p><strong>Estado:</strong> <span class="ticket-status ${statusClass}">${statusText}</span></p>
+                ${resultadoVerificacion.notificar ? `<div class="notification">¡Atención! ${resultadoVerificacion.message}</div>` : ''}
+            </div>
+        `;
+        resultDiv.className = 'report-output valid'; 
 
 
-  actualizarVistaSurtidores(); 
+    if (resultadoVerificacion.notificar) {
+        const notification = document.createElement('div');
+        notification.className = 'floating-notification';
+        notification.textContent = resultadoVerificacion.message; 
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 5000); 
+    }
+
+    formVerificarTurno.reset();
+  }});
+
+  actualizarVistaSurtidores();
     if (mensajeCapacidad) {
-        mensajeCapacidad.textContent = 'Seleccione un surtidor para validar capacidad.'; 
+        mensajeCapacidad.textContent = 'Seleccione un surtidor para validar capacidad.';
          mensajeCapacidad.className = '';
     }
     if (ticketCantidadMensajeDiv) {
-        ticketCantidadMensajeDiv.textContent = ''; 
+        ticketCantidadMensajeDiv.textContent = '';
          ticketCantidadMensajeDiv.className = '';
     }
     if (cancelTicketMessageDiv) {
          cancelTicketMessageDiv.textContent = '';
          cancelTicketMessageDiv.className = '';
     }
+    if (historyDiv) {
+        historyDiv.innerHTML = '<p class="empty-history">No hay intentos fallidos de verificación.</p>';
+    }
 
-    
-    renderTicketHistory(); 
-    renderFailedCancellationHistory(); 
+    renderTicketHistory();
+    renderFailedCancellationHistory();
 
-
-}); 
+});

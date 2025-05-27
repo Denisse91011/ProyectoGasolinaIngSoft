@@ -474,5 +474,22 @@
     },
     "coverage": 0,
     "test_count": 32
+  },
+  {
+    "sha": "eacf749259cdcb62199468467bf983d0f0586c17",
+    "author": "Denisse91011",
+    "commit": {
+      "date": "2025-05-27T01:41:51.000Z",
+      "message": "prueba cypress y funcion verificarTurnoTicket funcionando",
+      "url": "https://github.com/Denisse91011/ProyectoGasolinaIngSoft/commit/eacf749259cdcb62199468467bf983d0f0586c17"
+    },
+    "stats": {
+      "total": 518,
+      "additions": 312,
+      "deletions": 206,
+      "date": "2025-05-27"
+    },
+    "coverage": 0,
+    "test_count": 32
   }
 ]

@@ -191,20 +191,20 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
     it('debe notificar si el ticket está a 3 turnos de ser atendido y no ha sido notificado', () => {
         const ticket = {
             numeroTicket: 105,
-            surtidor: 'Surtidor 1',
+            surtidorNombre: 'Surtidor 1', 
             tipoCombustible: 'Gasolina Especial',
             cantidad: 40,
             placa: 'ZXC-123',
-            estado: 'Generado',
+            status: TICKET_STATUS.GENERADO, 
             notificado: false
         };
 
         const colaTurno = [
-           { numeroTicket: 101, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 102, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 103, estado: 'Generado', surtidor: 'Surtidor 1' },
-    ticket,
-    { numeroTicket: 106, estado: 'Generado', surtidor: 'Surtidor 1' }
+           { numeroTicket: 101, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 102, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 103, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           ticket,
+           { numeroTicket: 106, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' } 
         ];
 
         const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
@@ -216,20 +216,20 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
     it('no debe notificar si el ticket ya fue notificado', () => {
         const ticket = {
             numeroTicket: 105,
-            surtidor: 'Surtidor 1',
+            surtidorNombre: 'Surtidor 1', 
             tipoCombustible: 'Gasolina Especial',
             cantidad: 40,
             placa: 'ZXC-123',
-            estado: 'Generado',
+            status: TICKET_STATUS.GENERADO, 
             notificado: true
         };
 
         const colaTurno = [
-           { numeroTicket: 101, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 102, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 103, estado: 'Generado', surtidor: 'Surtidor 1' },
-    ticket,
-    { numeroTicket: 106, estado: 'Generado', surtidor: 'Surtidor 1' }
+           { numeroTicket: 101, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' },
+           { numeroTicket: 102, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 103, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           ticket,
+           { numeroTicket: 106, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' } 
         ];
 
         const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
@@ -241,19 +241,19 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
     it('no debe notificar si el ticket no está exactamente a 3 turnos de distancia', () => {
         const ticket = {
             numeroTicket: 105,
-            surtidor: 'Surtidor 1',
+            surtidorNombre: 'Surtidor 1', 
             tipoCombustible: 'Gasolina Especial',
             cantidad: 40,
             placa: 'ZXC-123',
-            estado: 'Generado',
+            status: TICKET_STATUS.GENERADO, 
             notificado: false
         };
 
         const colaTurno = [
-             { numeroTicket: 101, estado: 'Generado', surtidor: 'Surtidor 1' }, 
-    ticket, 
-    { numeroTicket: 102, estado: 'Generado', surtidor: 'Surtidor 1' }, 
-    { numeroTicket: 103, estado: 'Generado', surtidor: 'Surtidor 1' } 
+             { numeroTicket: 101, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+             ticket,
+             { numeroTicket: 102, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+             { numeroTicket: 103, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' } 
           ];
 
         const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
@@ -264,20 +264,20 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
     it('no debe notificar si el ticket está cancelado', () => {
         const ticket = {
             numeroTicket: 105,
-            surtidor: 'Surtidor 1',
+            surtidorNombre: 'Surtidor 1', 
             tipoCombustible: 'Gasolina Especial',
             cantidad: 40,
             placa: 'ZXC-123',
-            estado: 'Cancelado',
+            status: TICKET_STATUS.CANCELADO, 
             notificado: false
         };
 
         const colaTurno = [
-           { numeroTicket: 101, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 102, estado: 'Generado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 103, estado: 'Generado', surtidor: 'Surtidor 1' },
-    ticket,
-    { numeroTicket: 106, estado: 'Generado', surtidor: 'Surtidor 1' }
+           { numeroTicket: 101, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 102, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 103, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           ticket,
+           { numeroTicket: 106, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' } 
         ];
 
         const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
@@ -289,20 +289,20 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
     it('no debe notificar si el ticket fue completado', () => {
         const ticket = {
             numeroTicket: 105,
-            surtidor: 'Surtidor 1',
+            surtidorNombre: 'Surtidor 1', 
             tipoCombustible: 'Gasolina Especial',
             cantidad: 40,
             placa: 'ZXC-123',
-            estado: 'Cancelado',
+            status: TICKET_STATUS.COMPLETADO, 
             notificado: false
         };
 
         const colaTurno = [
-           { numeroTicket: 101, estado: 'Cancelado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 102, estado: 'Cancelado', surtidor: 'Surtidor 1' },
-    { numeroTicket: 103, estado: 'Cancelado', surtidor: 'Surtidor 1' },
-    ticket,
-    { numeroTicket: 106, estado: 'Cancelado', surtidor: 'Surtidor 1' }
+           { numeroTicket: 101, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 102, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           { numeroTicket: 103, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' }, 
+           ticket,
+           { numeroTicket: 106, status: TICKET_STATUS.GENERADO, surtidorNombre: 'Surtidor 1' } 
         ];
 
         const resultado = verificarTurnoTicket(ticket.numeroTicket, 'Surtidor 1', colaTurno);
@@ -310,6 +310,4 @@ describe('Notificación de ticket cuando se acerca el turno', () => {
         expect(resultado.notificar).toBe(false);
         expect(resultado.message).toBe('');
     });
-
 });
-
